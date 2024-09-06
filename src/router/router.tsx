@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Map from "../pages/Map";
 import PropertyManagement from "../pages/PropertyManagement";
 import ExcelListing from "../pages/ExcelListing";
+import SignUp from "../pages/SignUp";
 
 
 const Router = () => {
@@ -12,6 +13,7 @@ const Router = () => {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/map" element={<Map />} />
         <Route path="/propertyManagement" element={<PropertyManagement />} />
         <Route path="/excelListing" element={<ExcelListing />} />
