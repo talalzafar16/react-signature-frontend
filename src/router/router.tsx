@@ -5,6 +5,7 @@ import Map from "../pages/Map";
 import PropertyManagement from "../pages/PropertyManagement";
 import ExcelListing from "../pages/ExcelListing";
 import SignUp from "../pages/SignUp";
+import DisplayExcelData from "@/pages/DisplayExcelData";
 
 
 const Router = () => {
@@ -17,6 +18,7 @@ const Router = () => {
         <Route path="/map" element={<Map />} />
         <Route path="/propertyManagement" element={<PropertyManagement />} />
         <Route path="/excelListing" element={<ExcelListing />} />
+        <Route path="/displayExcelData/:id" element={<DisplayExcelData />} />
       </Routes>
     </BrowserRouter>
   );
