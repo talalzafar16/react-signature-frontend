@@ -1,10 +1,22 @@
 import React, { useState } from "react";
 import { SERVER_URL } from "../confidential";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { TiVendorAndroid } from "react-icons/ti";
+import { SiApple } from "react-icons/si";
+import { CiUser } from "react-icons/ci";
+import { CiLock } from "react-icons/ci";
+import logo from "../assets/login/logo.svg";
+import qrCode from "../assets/login/qr.png";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -43,56 +55,102 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center">Login</h2>
-        <form className="space-y-6" onSubmit={handleLogin}>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+    <div className="flex min-h-screen bg-white">
+      {/* Left Column */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 from-white to-gray-100 bg-loginBg">
+        <div>
+          <h1 className="text-4xl font-bold text-primary mb-8 text-center">
+            Welcome!
+          </h1>
+          <div className="w-full flex justify-center">
+            <img src={logo} alt="Signature Lands Pvt. Ltd." className="mb-2" />
           </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+          <div className="mb-2 w-full flex justify-center">
+            <img src={qrCode} alt="QR Code" className="w-72 h-72" />
           </div>
-          <p className="text-sm">Dont have an account? <span onClick={() => navigate('/sign-up')} className="cursor-pointer text-blue-600 font-semibold hover:underline">Sign Up</span></p>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        </div>
+        <div className="flex justify-center gap-4">
+          <Button
+            variant="outline"
+            className="justify-start text-primary border-primary py-5"
           >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            <SiApple className="mr-2" size={25} color="black" /> Download on IOS
+          </Button>
+          <Button
+            variant="outline"
+            className="justify-start text-primary border-primary py-5"
+          >
+            <TiVendorAndroid className="mr-2" size={25} color="black" />{" "}
+            Download on Android
+          </Button>
+        </div>
+      </div>
+
+      {/* Right Column */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-secondary">
+        <div className="w-full max-w-md">
+          <h2 className="text-3xl font-bold mb-8">Login</h2>
+          <form className="space-y-6" onSubmit={handleLogin}>
+            <div className="space-y-2">
+              <Input
+                id="email"
+                type="email"
+                placeholder="Email id or phone no"
+                className="border-black py-5"
+                icon={<CiUser />}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  className="border-black py-5"
+                  value={password}
+                  icon={<CiLock />}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 cursor-pointer"
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-4 w-4" />
+                  ) : (
+                    <EyeIcon className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Switch id="terms" />
+                <Label htmlFor="terms">Accept terms</Label>
+              </div>
+              <a
+                href="#"
+                className="text-sm text-black font-bold hover:underline"
+              >
+                Forgot password!
+              </a>
+            </div>
+            {error && <p className="text-sm text-left text-red-500">{error}</p>}
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primaryHover py-5"
+              disabled={loading}
+            >
+              Login
+            </Button>
+            <Button className="w-full text-primary bg-transparent hover:bg-transparent py-5 border border-black">
+              Register
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
