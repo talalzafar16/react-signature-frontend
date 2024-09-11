@@ -13,6 +13,7 @@ export default {
         primary: "#BC9128",
         primaryHover:"#c29d40",
         secondary: "#ECECEC",
+        grayText:"#939393",
       },
       backgroundImage: {
         loginBg: "url('/src/assets/login/loginBg.png')",

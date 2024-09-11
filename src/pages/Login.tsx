@@ -55,9 +55,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex bg-white">
       {/* Left Column */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 from-white to-gray-100 bg-loginBg">
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between h-screen p-10 from-white to-gray-100 bg-loginBg">
         <div>
           <h1 className="text-4xl font-bold text-primary mb-8 text-center">
             Welcome!
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right Column */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-secondary">
+      <div className="w-full lg:w-1/2 h-screen flex items-center justify-center p-8 bg-secondary">
         <div className="w-full max-w-md">
           <h2 className="text-3xl font-bold mb-8">Login</h2>
           <form className="space-y-6" onSubmit={handleLogin}>
