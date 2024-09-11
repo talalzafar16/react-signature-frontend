@@ -1,8 +1,11 @@
 
 
+
 const DashboardRight = () => {
   return (
-    <div>DashboardRight</div>
+    <div className="w-full min-h-screen bg-[#ffff] p-5">
+       
+    </div>
   )
 }
 

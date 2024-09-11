@@ -12,7 +12,7 @@ const Home = () => {
         <Sidebar />
       </div>
 
-      <div className="w-4/5 h-screen p-4 overflow-y-auto">
+      <div className="w-4/5 h-screen overflow-y-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="listings" element={<DisplayProperties />} />
