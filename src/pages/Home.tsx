@@ -7,12 +7,12 @@ import Sidebar from "@/components/Sidebar";
 
 const Home = () => {
   return (
-    <div className="flex">
-      <div className="w-1/4">
-      <Sidebar/>
+    <div className="flex overflow-y-hidden">
+      <div className="w-1/5">
+        <Sidebar />
       </div>
 
-      <div className="w-3/4 h-screen p-4">
+      <div className="w-4/5 h-screen p-4 overflow-y-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="listings" element={<DisplayProperties />} />

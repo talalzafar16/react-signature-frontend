@@ -1,8 +1,11 @@
-import React from 'react'
+
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div className="flex">
+      <div className="w-1/2">DashboardLeft</div>
+      <div className="w-1/2">DashboardRight</div>
+    </div>
   )
 }
 
