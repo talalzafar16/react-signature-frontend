@@ -1,25 +1,27 @@
 import { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import AddFiltersBtn from "@/components/displayProperties/AddFiltersBtn";
+import PropertiesTable from "@/components/displayProperties/PropertiesTable";
+import TablePagination from "@/components/displayProperties/TablePagination";
+import Header from "@/components/Header";
 
 // Sample data
 const data = [
+  {
+    blockName: "A",
+    plotNumber: 101,
+    possessionChargesStatus: "Half paid",
+    plotType: "Corner",
+    size: "10 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "A",
+    plotNumber: 101,
+    possessionChargesStatus: "Half paid",
+    plotType: "Corner",
+    size: "10 Marla",
+    category: "Residential",
+  },
   {
     blockName: "A",
     plotNumber: 101,
@@ -68,11 +70,123 @@ const data = [
     size: "20 Marla",
     category: "Residential",
   },
+  {
+    blockName: "A",
+    plotNumber: 101,
+    possessionChargesStatus: "Half paid",
+    plotType: "Corner",
+    size: "10 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "B",
+    plotNumber: 205,
+    possessionChargesStatus: "Non Paid",
+    plotType: "General",
+    size: "5 Marla",
+    category: "Commercial",
+  },
+  {
+    blockName: "C",
+    plotNumber: 307,
+    possessionChargesStatus: "Full Paid",
+    plotType: "Park Facing",
+    size: "20 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "D",
+    plotNumber: 408,
+    possessionChargesStatus: "Transfer Free",
+    plotType: "General",
+    size: "10 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "E",
+    plotNumber: 512,
+    possessionChargesStatus: "Non Paid",
+    plotType: "Corner",
+    size: "5 Marla",
+    category: "Commercial",
+  },
+  {
+    blockName: "F",
+    plotNumber: 601,
+    possessionChargesStatus: "Half Paid",
+    plotType: "Park Facing",
+    size: "20 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "E",
+    plotNumber: 512,
+    possessionChargesStatus: "Non Paid",
+    plotType: "Corner",
+    size: "5 Marla",
+    category: "Commercial",
+  },
+  {
+    blockName: "F",
+    plotNumber: 601,
+    possessionChargesStatus: "Half Paid",
+    plotType: "Park Facing",
+    size: "20 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "E",
+    plotNumber: 512,
+    possessionChargesStatus: "Non Paid",
+    plotType: "Corner",
+    size: "5 Marla",
+    category: "Commercial",
+  },
+  {
+    blockName: "F",
+    plotNumber: 601,
+    possessionChargesStatus: "Half Paid",
+    plotType: "Park Facing",
+    size: "20 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "E",
+    plotNumber: 512,
+    possessionChargesStatus: "Non Paid",
+    plotType: "Corner",
+    size: "5 Marla",
+    category: "Commercial",
+  },
+  {
+    blockName: "F",
+    plotNumber: 601,
+    possessionChargesStatus: "Half Paid",
+    plotType: "Park Facing",
+    size: "20 Marla",
+    category: "Residential",
+  },
+  {
+    blockName: "E",
+    plotNumber: 512,
+    possessionChargesStatus: "Non Paid",
+    plotType: "Corner",
+    size: "5 Marla",
+    category: "Commercial",
+  },
+  {
+    blockName: "F",
+    plotNumber: 607,
+    possessionChargesStatus: "Half Paid",
+    plotType: "Park Facing",
+    size: "20 Marla",
+    category: "Residential",
+  },
 ];
 
 const intitialFilters = {
   blockName: "",
-  plotNumber: "",
+  plotNumber: 0,
   possessionChargesStatus: "All",
   plotType: "All",
   size: "All",
@@ -81,10 +195,9 @@ const intitialFilters = {
 
 const DisplayProperties = () => {
   const [filters, setFilters] = useState(intitialFilters);
-
-  const handleFilterChange = (field: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
-  };
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const propertiesPerPage = 5;
 
   const filteredData = data.filter(
     (item) =>
@@ -92,153 +205,60 @@ const DisplayProperties = () => {
         item.blockName
           .toLowerCase()
           .includes(filters.blockName.toLowerCase())) &&
-      (filters.plotNumber === "" ||
-        item.plotNumber.toString().includes(filters.plotNumber)) &&
+      (filters.plotNumber === 0 ||
+        item.plotNumber.toString().includes(filters.plotNumber.toString())) &&
       (filters.possessionChargesStatus === "All" ||
-        item.possessionChargesStatus.toLowerCase() === filters.possessionChargesStatus.toLowerCase() ) &&
-      (filters.plotType === "All" || item.plotType.toLowerCase() === filters.plotType.toLowerCase()) &&
+        item.possessionChargesStatus.toLowerCase() ===
+          filters.possessionChargesStatus.toLowerCase()) &&
+      (filters.plotType === "All" ||
+        item.plotType.toLowerCase() === filters.plotType.toLowerCase()) &&
       (filters.size === "All" || item.size === filters.size) &&
-      (filters.category === "All" || item.category.toLowerCase() === filters.category.toLowerCase())
+      (filters.category === "All" ||
+        item.category.toLowerCase() === filters.category.toLowerCase())
   );
 
-  const clearFilters = () => {
-    setFilters(intitialFilters);
-  };
+  // Calculate the current properties to display
+  const indexOfLastProperty = currentPage * propertiesPerPage;
+  const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
+  const currentProperties = filteredData.slice(
+    indexOfFirstProperty,
+    indexOfLastProperty
+  );
+
+  // Handle page change
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
-    <div className="container mx-auto py-10 px-10 bg-slate-200 min-h-screen">
-      <Card>
-        <CardHeader>
-          <CardTitle>Property Management</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div>
-              <Label htmlFor="blockName">Block Name</Label>
-              <Input
-                id="blockName"
-                value={filters.blockName}
-                onChange={(e) =>
-                  handleFilterChange("blockName", e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="plotNumber">Plot Number</Label>
-              <Input
-                id="plotNumber"
-                value={filters.plotNumber}
-                onChange={(e) =>
-                  handleFilterChange("plotNumber", e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="chargesStatus">Charges Status</Label>
-              <Select
-                value={filters.possessionChargesStatus}
-                onValueChange={(value) =>
-                  handleFilterChange("possessionChargesStatus", value)
-                }
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="Half paid">Half paid</SelectItem>
-                  <SelectItem value="Non Paid">Non Paid</SelectItem>
-                  <SelectItem value="Full paid">Full paid</SelectItem>
-                  <SelectItem value="Transfer Free">Transfer Free</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="plotType">Plot Type</Label>
-              <Select
-                value={filters.plotType}
-                onValueChange={(value) => handleFilterChange("plotType", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="Corner">Corner</SelectItem>
-                  <SelectItem value="General">General</SelectItem>
-                  <SelectItem value="Park facing">Park facing</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="size">Size</Label>
-              <Select
-                value={filters.size}
-                onValueChange={(value) => handleFilterChange("size", value)}
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select size" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="5 Marla">5 Marla</SelectItem>
-                  <SelectItem value="10 Marla">10 Marla</SelectItem>
-                  <SelectItem value="20 Marla">20 Marla</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="propertyType">Property Type</Label>
-              <Select
-                value={filters.category}
-                onValueChange={(value) => handleFilterChange("category", value)}
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All</SelectItem>
-                  <SelectItem value="Residential">Residential</SelectItem>
-                  <SelectItem value="Commercial">Commercial</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <button
-              className="border border-gray-200 rounded py-1 bg-slate-500 text-white font-bold hover:bg-slate-400"
-              onClick={clearFilters}
-            >
-              Clear Filters
-            </button>
-          </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Block Name</TableHead>
-                <TableHead>Plot Number</TableHead>
-                <TableHead>Charges Status</TableHead>
-                <TableHead>Plot Type</TableHead>
-                <TableHead>Size</TableHead>
-                <TableHead>Property Type</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredData.map((item,index) => (
-                <TableRow key={index}>
-                  <TableCell>{item.blockName}</TableCell>
-                  <TableCell>{item.plotNumber}</TableCell>
-                  <TableCell>{item.possessionChargesStatus}</TableCell>
-                  <TableCell>{item.plotType}</TableCell>
-                  <TableCell>{item.size}</TableCell>
-                  <TableCell>{item.category}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+    <div className="p-5 bg-slate-100 min-h-screen">
+      {/* <!-- Header --> */}
+      <Header search={search} setSearch={setSearch} heading="My Properties"/>
+     
+
+      {/* <!-- Add filters --> */}
+      <div className="flex items-center justify-between mt-16">
+        <div>
+          <p className="text-grayText">
+            Showing <span className="text-black font-semibold">{indexOfFirstProperty+1}-{indexOfLastProperty}</span> of{" "}
+            <span className="text-black font-semibold">{filteredData.length}</span> results
+          </p>
+        </div>
+        <AddFiltersBtn
+          intitialFilters={intitialFilters}
+          filters={filters}
+          setFilters={setFilters}
+        />
+      </div>
+
+      {/* <!-- Properties Table --> */}
+      <PropertiesTable filteredData={currentProperties} />
+      <div className="mt-5">
+        <TablePagination
+          propertiesPerPage={propertiesPerPage}
+          totalProperties={filteredData.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
 };
