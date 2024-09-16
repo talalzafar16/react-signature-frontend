@@ -47,6 +47,11 @@ const Sidebar = () => {
     navigate(link);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  }
+
   return (
     <div className="w-full min-h-screen bg-black flex flex-col justify-between pb-10 pt-20">
 
@@ -72,7 +77,7 @@ const Sidebar = () => {
    
         <div
           className="flex gap-5 cursor-pointer items-center ml-16"
-          onClick={() => handleNavigation("/")}
+          onClick={handleLogout}
         >
           <IoIosLogOut size={iconSize} color={iconColor} />
           <p style={{ color: iconColor }}>Logout</p>

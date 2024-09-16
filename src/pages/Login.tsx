@@ -28,8 +28,6 @@ const Login: React.FC = () => {
     setError(null);
     const loginData = { email, password };
 
-    console.log("Logging in with:", loginData);
-
     try {
       const response = await fetch(`${SERVER_URL}users/login`, {
         method: "POST",
@@ -45,6 +43,7 @@ const Login: React.FC = () => {
 
       const result = await response.json();
       console.log("Login successful:", result);
+      localStorage.setItem("user", JSON.stringify(result.data.userData));
       navigate("/home");
     } catch (err) {
       setError("Invalid email or password");
@@ -99,6 +98,7 @@ const Login: React.FC = () => {
                 className="border-black py-5"
                 icon={<CiUser />}
                 value={email}
+                required
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -110,6 +110,7 @@ const Login: React.FC = () => {
                   placeholder="Password"
                   className="border-black py-5"
                   value={password}
+                  required
                   icon={<CiLock />}
                   onChange={(e) => setPassword(e.target.value)}
                 />
