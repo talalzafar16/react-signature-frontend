@@ -16,6 +16,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import {
+  categoryOptions,
+  chargesStatusOptions,
+  plotTypeOptions,
+  sizeOptions,
+} from "@/contants";
 
 export type Property = {
   blockName: string;
@@ -31,17 +37,6 @@ type AddFiltersBtnProps = {
   filters: Property;
   setFilters: React.Dispatch<React.SetStateAction<Property>>;
 };
-
-const chargesStatusOptions = [
-  "All",
-  "Half paid",
-  "Non Paid",
-  "Full paid",
-  "Transfer Free",
-];
-const plotTypeOptions = ["All", "Corner", "General", "Park facing"];
-const sizeOptions = ["All", "5 Marla", "10 Marla", "20 Marla"];
-const categoryOptions = ["All", "Residential", "Commercial"];
 
 const AddFiltersBtn = ({
   intitialFilters,
@@ -64,9 +59,8 @@ const AddFiltersBtn = ({
   };
 
   const handleDialogClose = () => {
-    setLocalFilters(filters); 
+    setLocalFilters(filters);
   };
-
 
   console.log(filters);
 
@@ -113,6 +107,7 @@ const AddFiltersBtn = ({
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="All">All</SelectItem>
                     {chargesStatusOptions.map((option, index) => (
                       <SelectItem key={index} value={option}>
                         {option}
@@ -133,6 +128,7 @@ const AddFiltersBtn = ({
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="All">All</SelectItem>
                     {plotTypeOptions.map((option, index) => (
                       <SelectItem key={index} value={option}>
                         {option}
@@ -152,6 +148,7 @@ const AddFiltersBtn = ({
                     <SelectValue placeholder="Select size" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="All">All</SelectItem>
                     {sizeOptions.map((option, index) => (
                       <SelectItem key={index} value={option}>
                         {option}
@@ -173,6 +170,7 @@ const AddFiltersBtn = ({
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="All">All</SelectItem>
                     {categoryOptions.map((option, index) => (
                       <SelectItem key={index} value={option}>
                         {option}
