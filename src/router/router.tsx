@@ -4,17 +4,20 @@ import Login from "../pages/Login";
 import Map from "../pages/Map";
 import ExcelListing from "../pages/ExcelListing";
 import DisplayExcelData from "@/pages/DisplayExcelData";
-
+import ProtectedRoute from "./ProtectedRoute";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home/*" element={<Home />} />
         <Route path="/" element={<Login />} />
-        <Route path="/map" element={<Map />} />
-        <Route path="/excelListing" element={<ExcelListing />} />
-        <Route path="/displayExcelData/:id" element={<DisplayExcelData />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home/*" element={<Home />} />
+          <Route path="/map" element={<Map />} />
+          <Route path="/excelListing" element={<ExcelListing />} />
+          <Route path="/displayExcelData/:id" element={<DisplayExcelData />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
