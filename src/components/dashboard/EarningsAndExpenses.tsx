@@ -5,10 +5,10 @@ import expenseIcon from "@/assets/dashboard/money-send.svg";
 
 const EarningsAndExpenses = () => {
   return (
-    <Card>
-      <CardContent className="p-5 ">
+    <Card className="h-full">
+      <CardContent className="p-5 flex flex-col justify-between h-full">
         {/* <!-- Earnings --> */}
-        <div className="flex flex-col gap-5 border-b-2 pb-5 ">
+        <div className="flex flex-col gap-5">
           <div className="flex items-center gap-5">
             <img src={earningIcon} alt="Earnings" className="w-10 h-10" />
             <div className="flex flex-col gap-3">
@@ -21,6 +21,8 @@ const EarningsAndExpenses = () => {
             <p className="text-xs text-grayText">since last week</p>
         </div>
         </div>
+        {/* <!-- border --> */}
+        <div className="border-b-2"></div>
         {/* <!-- Expenses --> */}
         <div className="flex flex-col gap-5 pt-4">
           <div className="flex items-center gap-5">
