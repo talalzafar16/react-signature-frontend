@@ -66,14 +66,14 @@ const AddFiltersBtn = ({
 
   return (
     <Dialog onOpenChange={handleDialogClose}>
-      <DialogTrigger className="bg-[#BC9128] text-white rounded-full py-1 px-5">
+      <DialogTrigger className="bg-[#BC9128] text-white rounded-full py-1 px-5 max-sm:px-3">
         Add Filters
       </DialogTrigger>
-      <DialogContent className="min-w-[800px]">
+      <DialogContent className="lg:min-w-[800px] max-lg:max-w-[90%] max-lg:max-h-[90%] max-lg:overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Filters</DialogTitle>
           <DialogDescription>
-            <div className="grid grid-cols-3 gap-4 gap-y-10 my-6 text-black">
+            <div className="grid grid-cols-3 gap-4 gap-y-10 my-6 text-black max-sm:grid-cols-1">
               <div>
                 <Label htmlFor="blockName">Block Name*</Label>
                 <Input

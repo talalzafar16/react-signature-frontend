@@ -10,7 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { categoryOptions, chargesStatusOptions, plotTypeOptions, sizeOptions } from "@/contants";
+import {
+  categoryOptions,
+  chargesStatusOptions,
+  plotTypeOptions,
+  sizeOptions,
+} from "@/contants";
 
 const initialListingDetails = {
   blockName: "",
@@ -41,122 +46,116 @@ const AddProperty = () => {
         <CardHeader className="font-semibold text-lg">
           Listing Details
         </CardHeader>
-        <CardContent className="flex flex-col gap-y-5">
+        <CardContent className="grid grid-cols-2 gap-x-5 gap-y-5 max-sm:grid-cols-1">
           {/* <!-- Block Name and Plot Number --> */}
-          <div className="flex gap-x-5">
-            <div className="flex-1">
-              <Label htmlFor="blockName">Block Name*</Label>
-              <Input
-                id="blockName"
-                name="blockName"
-                value={listingDetails.blockName}
-                onChange={handleListingDetailsChange}
-              />
-            </div>
-            <div className="flex-1">
-              <Label htmlFor="plotNumber">Plot Number*</Label>
-              <Input
-                id="plotNumber"
-                type="number"
-                name="plotNumber"
-                value={listingDetails.plotNumber}
-                onChange={handleListingDetailsChange}
-              />
-            </div>
+
+          <div>
+            <Label htmlFor="blockName">Block Name*</Label>
+            <Input
+              id="blockName"
+              name="blockName"
+              value={listingDetails.blockName}
+              onChange={handleListingDetailsChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="plotNumber">Plot Number*</Label>
+            <Input
+              id="plotNumber"
+              type="number"
+              name="plotNumber"
+              value={listingDetails.plotNumber}
+              onChange={handleListingDetailsChange}
+            />
           </div>
 
           {/* <!-- Possession Charges Status and Plot Type --> */}
-          <div className="flex gap-x-5">
-            <div className="flex-1">
-              <Label>Charges Status</Label>
-              <Select
-                value={listingDetails.possessionChargesStatus}
-                name="possessionChargesStatus"
-                onValueChange={handleListingDetailsChange}
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {chargesStatusOptions.map((option, index) => (
-                    <SelectItem key={index} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex-1">
-              <Label>Plot Type</Label>
 
-              <Select
-                value={listingDetails.plotType}
-                name="plotType"
-                onValueChange={handleListingDetailsChange}
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {plotTypeOptions.map((option, index) => (
-                    <SelectItem key={index} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-           
+          <div>
+            <Label>Charges Status</Label>
+            <Select
+              value={listingDetails.possessionChargesStatus}
+              name="possessionChargesStatus"
+              onValueChange={handleListingDetailsChange}
+              defaultValue="All"
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {chargesStatusOptions.map((option, index) => (
+                  <SelectItem key={index} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Plot Type</Label>
+
+            <Select
+              value={listingDetails.plotType}
+              name="plotType"
+              onValueChange={handleListingDetailsChange}
+              defaultValue="All"
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Type" />
+              </SelectTrigger>
+              <SelectContent>
+                {plotTypeOptions.map((option, index) => (
+                  <SelectItem key={index} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* <!-- Size and Category --> */}
-          <div className="flex gap-x-5">
-            <div className="flex-1">
-              <Label>Size</Label>
-              <Select
-                value={listingDetails.size}
-                name="size"
-                onValueChange={handleListingDetailsChange}
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Size" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sizeOptions.map((option, index) => (
-                    <SelectItem key={index} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex-1">
-              <Label>Category</Label>
 
-              <Select
-                value={listingDetails.category}
-                name="category"
-                onValueChange={handleListingDetailsChange}
-                defaultValue="All"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoryOptions.map((option, index) => (
-                    <SelectItem key={index} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-           
+          <div>
+            <Label>Size</Label>
+            <Select
+              value={listingDetails.size}
+              name="size"
+              onValueChange={handleListingDetailsChange}
+              defaultValue="All"
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Size" />
+              </SelectTrigger>
+              <SelectContent>
+                {sizeOptions.map((option, index) => (
+                  <SelectItem key={index} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+          <div>
+            <Label>Category</Label>
 
+            <Select
+              value={listingDetails.category}
+              name="category"
+              onValueChange={handleListingDetailsChange}
+              defaultValue="All"
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryOptions.map((option, index) => (
+                  <SelectItem key={index} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
       </Card>
     </div>

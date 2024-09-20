@@ -33,29 +33,41 @@ const TablePagination = ({
     if (totalPages <= 4) {
       return pageNumbers; // Show all if total pages are less than or equal to 4
     } else if (currentPage <= 3) {
-      return [...pageNumbers.slice(0, 4), '...']; // Show first 4 pages and ellipsis
+      return [...pageNumbers.slice(0, 4), "..."]; // Show first 4 pages and ellipsis
     } else if (currentPage >= totalPages - 2) {
-      return ['...', ...pageNumbers.slice(totalPages - 4)]; // Show ellipsis and last 4 pages
+      return ["...", ...pageNumbers.slice(totalPages - 4)]; // Show ellipsis and last 4 pages
     } else {
-      return ['...', currentPage - 1, currentPage, currentPage + 1, '...']; // Show middle pages with ellipsis
+      return ["...", currentPage - 1, currentPage, currentPage + 1, "..."]; // Show middle pages with ellipsis
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      paginate(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      paginate(currentPage - 1);
     }
   };
 
   return (
     <Pagination>
       <PaginationContent>
-        {currentPage > 1 && (
-          <PaginationItem>
-            <FaArrowLeftLong
-              className="cursor-pointer"
-              onClick={() => paginate(currentPage - 1)}
-            />
-          </PaginationItem>
-        )}
+        <PaginationItem>
+          <FaArrowLeftLong
+            className={`cursor-pointer ${
+              currentPage === 1 && "cursor-not-allowed mr-3"
+            }`}
+            onClick={handlePrevPage}
+          />
+        </PaginationItem>
 
         {/* Render pagination links */}
         {visiblePages().map((number, index) =>
-          number === '...' ? (
+          number === "..." ? (
             <PaginationItem key={index}>
               <PaginationEllipsis />
             </PaginationItem>
@@ -77,14 +89,14 @@ const TablePagination = ({
           )
         )}
 
-        {currentPage < totalPages && (
-          <PaginationItem>
-            <FaArrowRightLong
-              className="cursor-pointer"
-              onClick={() => paginate(currentPage + 1)}
-            />
-          </PaginationItem>
-        )}
+        <PaginationItem>
+          <FaArrowRightLong
+            className={`cursor-pointer ${
+              currentPage === totalPages && "cursor-not-allowed ml-3"
+            }`}
+            onClick={handleNextPage}
+          />
+        </PaginationItem>
       </PaginationContent>
     </Pagination>
   );

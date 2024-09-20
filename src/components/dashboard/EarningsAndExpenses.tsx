@@ -22,7 +22,7 @@ const EarningsAndExpenses = () => {
         </div>
         </div>
         {/* <!-- border --> */}
-        <div className="border-b-2"></div>
+        <div className="border-b-2 max-sm:mt-5"></div>
         {/* <!-- Expenses --> */}
         <div className="flex flex-col gap-5 pt-4">
           <div className="flex items-center gap-5">
