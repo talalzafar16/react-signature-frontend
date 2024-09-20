@@ -237,7 +237,7 @@ const DisplayProperties = () => {
       {/* <!-- Add filters --> */}
       <div className="flex items-center justify-between mt-16">
         <div>
-          <p className="text-grayText">
+          <p className="text-grayText max-sm:text-sm">
             Showing <span className="text-black font-semibold">{indexOfFirstProperty+1}-{indexOfLastProperty}</span> of{" "}
             <span className="text-black font-semibold">{filteredData.length}</span> results
           </p>

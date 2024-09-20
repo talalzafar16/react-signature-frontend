@@ -5,14 +5,16 @@ import AddProperty from "./AddProperty";
 import Settings from "./Settings";
 import Sidebar from "@/components/Sidebar";
 
+
 const Home = () => {
+  
   return (
     <div className="flex overflow-y-hidden">
-      <div className="w-1/5">
+      <div className="w-1/5 max-lg:hidden">
         <Sidebar />
       </div>
 
-      <div className="w-4/5 h-screen overflow-y-auto">
+      <div className="w-4/5 max-lg:w-full h-screen overflow-y-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="listings" element={<DisplayProperties />} />

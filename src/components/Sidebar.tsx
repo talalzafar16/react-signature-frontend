@@ -54,7 +54,6 @@ const Sidebar = () => {
 
   return (
     <div className="w-full min-h-screen bg-black flex flex-col justify-between pb-10 pt-20">
-
       <div className="flex flex-col gap-8 mx-auto">
         {data.map((option, index) => (
           <div
