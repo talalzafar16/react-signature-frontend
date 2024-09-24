@@ -69,12 +69,23 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
 }
 const Map = () => {
   // const  = [51.505, -0.09]
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [arratLATLONG, setArratLATLONG] = useState<Coordinates>([[31.462254, 74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]])
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
   return (
-    // @ts-ignore
-    <MapContainer center={[31.46081, 74.18806]}  zoom={17} scrollWheelZoom={false}>
+    <div style={{position: 'relative'}}>
+      {isLoading && (<div style={{position:'absolute', height:'100%', width: '100%',background:'rgba(156, 163, 175, .2)', display:'flex', justifyContent:'center',alignItems:'center', zIndex:3294832847234}}>
+        <h1 className='text-2xl text-primary' >Loading ...</h1 >
+      </div>)}
+    {/* @ts-ignore */}
+    <MapContainer center={[31.46081, 74.18806]}
+     whenReady={
+      () =>{
+        setTimeout(() => setIsLoading(false), 6000);
+      }
+     }
+    zoom={17} scrollWheelZoom={false}>
       <TileLayer
         // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -104,6 +115,7 @@ const Map = () => {
         ))
       }
     </MapContainer>
+    </div>
   )
 }
 
