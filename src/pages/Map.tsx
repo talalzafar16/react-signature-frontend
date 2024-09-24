@@ -4,7 +4,6 @@ import { useMap } from 'react-leaflet/hooks'
 import '../App.css'
 import 'leaflet/dist/leaflet.css';
 import MapUrl from '../assets/map/overlay3.png'
-import Marker1 from '../assets/map/marker.png'
 import L from 'leaflet';
 
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
