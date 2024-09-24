@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Popup, Marker, ImageOverlay } from 'react-leaf
 import { useMap } from 'react-leaflet/hooks'
 import '../App.css'
 import 'leaflet/dist/leaflet.css';
-import MapUrl from '../assets/map/overlay3.png'
+import MapUrl from '../assets/map/overlay10.png'
 import L from 'leaflet';
 
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -74,7 +74,7 @@ const Map = () => {
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
   return (
     // @ts-ignore
-    <MapContainer center={[31.46081, 74.18806]} zoom={15} scrollWheelZoom={false}>
+    <MapContainer center={[31.46081, 74.18806]}  zoom={17} scrollWheelZoom={false}>
       <TileLayer
         // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
