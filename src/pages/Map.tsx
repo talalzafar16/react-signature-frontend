@@ -82,7 +82,7 @@ const Map = () => {
     <MapContainer center={[31.46081, 74.18806]}
      whenReady={
       () =>{
-        setTimeout(() => setIsLoading(false), 6000);
+        setTimeout(() => setIsLoading(false), 10000);
       }
      }
     zoom={17} scrollWheelZoom={false}>
