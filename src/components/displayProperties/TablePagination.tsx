@@ -59,7 +59,7 @@ const TablePagination = ({
         <PaginationItem>
           <FaArrowLeftLong
             className={`cursor-pointer ${
-              currentPage === 1 && "cursor-not-allowed mr-3"
+              currentPage === 1 ? "cursor-not-allowed mr-3" : "mr-3"
             }`}
             onClick={handlePrevPage}
           />
@@ -68,7 +68,7 @@ const TablePagination = ({
         {/* Render pagination links */}
         {visiblePages().map((number, index) =>
           number === "..." ? (
-            <PaginationItem key={index}>
+            <PaginationItem key={`ellipsis-${index}`}>
               <PaginationEllipsis />
             </PaginationItem>
           ) : (
@@ -92,7 +92,7 @@ const TablePagination = ({
         <PaginationItem>
           <FaArrowRightLong
             className={`cursor-pointer ${
-              currentPage === totalPages && "cursor-not-allowed ml-3"
+              currentPage === totalPages ? "cursor-not-allowed ml-3" : "ml-3"
             }`}
             onClick={handleNextPage}
           />
