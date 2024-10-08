@@ -1,10 +1,11 @@
 import { FC, useState } from 'react';
 import { MapContainer, TileLayer, Popup, Marker, ImageOverlay } from 'react-leaflet'
 import { useMap } from 'react-leaflet/hooks'
+import L from 'leaflet';
+import Modal from '@/components/Modal';
 import '../App.css'
 import 'leaflet/dist/leaflet.css';
 import MapUrl from '../assets/map/overlay10.png'
-import L from 'leaflet';
 
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -42,27 +43,32 @@ const svgIcon = L.divIcon({
 
 type Coordinates = [number, number][];
 const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
+
   const map = useMap();
+
+
 
   return (
     <div>
       <Marker
-      // @ts-ignore
+        // @ts-ignore
         icon={svgIcon}
         position={coords}
         eventHandlers={{
           click: (e) => {
             map.flyTo(e.latlng, 17);
-            setFunc((prevCoord) =>  prevCoord.filter( (prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
-                // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng 
-              )
-           )
+            console.log('target', e.latlng);
+            setFunc(e.latlng)
+            // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
+            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng 
+            // )
+            // )
           },
         }}
       >
         <Popup>
-      A pretty CSS3 popup. <br /> Easily customizable.
-    </Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
       </Marker>
     </div>
   );
@@ -70,34 +76,38 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
 const Map = () => {
   // const  = [51.505, -0.09]
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isModal, setIsModal] = useState<boolean>(true);
   const [arratLATLONG, setArratLATLONG] = useState<Coordinates>([[31.462254, 74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]])
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
+
   return (
-    <div style={{position: 'relative'}}>
-      {isLoading && (<div style={{position:'absolute', height:'100%', width: '100%',background:'rgba(156, 163, 175, .2)', display:'flex', justifyContent:'center',alignItems:'center', zIndex:3294832847234}}>
+    <div style={{ position: 'relative' }}>
+      {isLoading && (<div style={{ position: 'absolute', height: '100%', width: '100%', background: 'rgba(156, 163, 175, .2)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3294832847234 }}>
         <h1 className='text-2xl text-primary' >Loading ...</h1 >
       </div>)}
-    {/* @ts-ignore */}
-    <MapContainer center={[31.46081, 74.18806]}
-     whenReady={
-      () =>{
-        setTimeout(() => setIsLoading(false), 10000);
-      }
-     }
-    zoom={17} scrollWheelZoom={false}>
-      <TileLayer
-        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <ImageOverlay
-        url={MapUrl}
-        bounds={[[31.48734, 74.170899], [31.437555, 74.209462]]}
-        // @ts-ignore
-        // opacity={0.7}
-        zIndex={10}
-      />
-      {/* <Marker position={item}
+      {/* @ts-ignore */}
+      <MapContainer center={[31.46081, 74.18806]}
+        whenReady={
+          () => {
+            setTimeout(() => setIsLoading(false), 10000);
+          }
+        }
+        zoom={17} scrollWheelZoom={false}>
+        {/* @ts-ignore */}
+        {isModal && <Modal toggle={() => { setIsModal(false) }} />}
+        <TileLayer
+          // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <ImageOverlay
+          url={MapUrl}
+          bounds={[[31.48734, 74.170899], [31.437555, 74.209462]]}
+          // @ts-ignore
+          // opacity={0.7}
+          zIndex={10}
+        />
+        {/* <Marker position={item}
   eventHandlers={{
     click: (e) => {
       console.log('marker clicked', e)
@@ -109,12 +119,17 @@ const Map = () => {
       A pretty CSS3 popup. <br /> Easily customizable.
     </Popup>
   </Marker> */}
-      {
-        arratLATLONG.map((item: [number, number]) => (
-          <Markerwhatever coords={item} setFunc={setArratLATLONG} />
-        ))
-      }
-    </MapContainer>
+        {
+          arratLATLONG.map((item: [number, number]) => (
+            <Markerwhatever coords={item} setFunc={(value) => {
+              const arrays = [...arratLATLONG];
+              console.log(value, 'newvalue');
+              arrays.push(value);
+              setArratLATLONG(arrays);
+            }} />
+          ))
+        }
+      </MapContainer>
     </div>
   )
 }
