@@ -1,11 +1,22 @@
-import { FC, useState } from 'react';
-import { MapContainer, TileLayer, Popup, Marker, ImageOverlay } from 'react-leaflet'
-import { useMap } from 'react-leaflet/hooks'
-import L from 'leaflet';
-import Modal from '@/components/Modal';
-import '../App.css'
-import 'leaflet/dist/leaflet.css';
-import MapUrl from '../assets/map/overlay10.png'
+import { FC, useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Popup,
+  Marker,
+  ImageOverlay,
+  useMapEvents,
+} from "react-leaflet";
+import { useMap } from "react-leaflet/hooks";
+import L from "leaflet";
+import Modal from "@/components/Modal";
+import "../App.css";
+import "leaflet/dist/leaflet.css";
+import MapUrl from "../assets/map/overlay10.png";
+import { API_ENDPOINT } from '../config/apiEndpoint';
+import axios, { AxiosResponse } from "axios";
+import SellPropertyModal from "@/components/SellPropertyModal";
+
 
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -34,36 +45,47 @@ const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version=
 
 const svgIcon = L.divIcon({
   html: svgString,
-  className: 'custom-svg-icon',
+  className: "custom-svg-icon",
   iconSize: [24, 24],
   iconAnchor: [12, 24],
-  popupAnchor: [0, -36]
+  popupAnchor: [0, -36],
 });
 
+type Coordinates = [number, number][] | [] | undefined;
 
-type Coordinates = [number, number][];
-const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
+interface Response {
+  data: Coordinates,
+  message: string
+}
 
+const Markerwhatever: FC<any> = ({ coords, setFunc, addCoordinates }) => {
   const map = useMap();
-
-
-
+  const mapss = useMapEvents({
+    click(e) {
+      console.log(e.latlng, "new_data");
+      setFunc(e.latlng);
+      addCoordinates(e.latlng)
+    },
+  });
+  const postionss: [number, number] =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
+  console.log('new_point', postionss);
   return (
     <div>
       <Marker
         // @ts-ignore
         icon={svgIcon}
-        position={coords}
+        position={[parseInt(coords['latitude']), parseInt(coords['longitude'])]}
         eventHandlers={{
           click: (e) => {
             map.flyTo(e.latlng, 17);
-            console.log('target', e.latlng);
-            setFunc(e.latlng)
+            console.log("target", e.latlng);
+            setFunc(e.latlng);
+
             // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
-            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng 
+            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
             // )
             // )
-          },
+          }
         }}
       >
         <Popup>
@@ -72,37 +94,91 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
       </Marker>
     </div>
   );
-}
+};
 const Map = () => {
-  // const  = [51.505, -0.09]
+  // const = [51.505, -0.09]
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isModal, setIsModal] = useState<boolean>(true);
-  const [arratLATLONG, setArratLATLONG] = useState<Coordinates>([[31.462254, 74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]])
+  const [isModal, setIsModal] = useState<boolean>(false);
+  const [latitude, setLatitude] = useState<number>(0)
+  const [longitude, setLongitude] = useState<number>(0)
+  const [arratLATLONG, setArratLATLONG] = useState<Coordinates>([
+    // [31.462254, 74.196334],
+    // [31.463052, 74.194269],
+    // [31.467729, 74.184702],
+    // [31.47226, 74.189333],
+    // [31.466812595250545, 74.18388783931734],
+    // [31.46274027517365, 74.18595850467683],
+    // [31.459541778257144, 74.1868168115616],
+  ]);
+
+  useEffect(() => {
+    axios.get(`${API_ENDPOINT}/plots/get-plot`)
+      .then((res: AxiosResponse<Response>) => {
+        console.log('respoonse_data', res.data.data)
+        setArratLATLONG(res.data.data);
+      })
+  }, [])
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
 
   return (
-    <div style={{ position: 'relative' }}>
-      {isLoading && (<div style={{ position: 'absolute', height: '100%', width: '100%', background: 'rgba(156, 163, 175, .2)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3294832847234 }}>
-        <h1 className='text-2xl text-primary' >Loading ...</h1 >
-      </div>)}
-      {/* @ts-ignore */}
-      <MapContainer center={[31.46081, 74.18806]}
-        whenReady={
-          () => {
-            setTimeout(() => setIsLoading(false), 10000);
-          }
-        }
-        zoom={17} scrollWheelZoom={false}>
+    <div style={{ position: "relative" }}>
+      {isLoading && (
+        <div
+          style={{
+            position: "absolute",
+            height: "100%",
+            width: "100%",
+            background: "rgba(156, 163, 175, .2)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 3294832847234,
+          }}
+        >
+          <h1 className="text-2xl text-primary">Loading ...</h1>
+        </div>
+      )}
+      <MapContainer
+        // @ts-ignore
+        center={[31.46081, 74.18806]}
+        dragging={false}
+        whenReady={() => {
+          setTimeout(() => setIsLoading(false), 10000);
+        }}
+        zoom={17}
+        scrollWheelZoom={false}
+      >
         {/* @ts-ignore */}
-        {isModal && <Modal toggle={() => { setIsModal(false) }} />}
+        {isModal && (
+          <Modal
+            toggle={(plot) => {
+              console.log('check_', latitude, longitude, plot);
+              if (latitude && longitude && plot) {
+                axios.post(`${API_ENDPOINT}/plots/add-plot`, { plotNumber: plot, latitude: latitude, longitude: longitude }).then(res1 => { console.log(res1); setIsModal(false); });
+                // fetch(`${API_ENDPOINT}/plots/add-plot`, {
+                //   method: "POST",
+                //   body: JSON.stringify({ plotNumber: plot, latitude: latitude, longitude: longitude })
+                // }).then(res => res.json()).then(res1 => { console.log(res1); setIsModal(false); }).catch(err => { console.log(err) })
+
+              } else {
+                alert('data')
+              }
+
+            }}
+          />
+        )}
         <TileLayer
-          // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          // @ts-ignore
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ImageOverlay
           url={MapUrl}
-          bounds={[[31.48734, 74.170899], [31.437555, 74.209462]]}
+          bounds={[
+            [31.48734, 74.170899],
+            [31.437555, 74.209462]
+          ]}
           // @ts-ignore
           // opacity={0.7}
           zIndex={10}
@@ -119,19 +195,31 @@ const Map = () => {
       A pretty CSS3 popup. <br /> Easily customizable.
     </Popup>
   </Marker> */}
-        {
-          arratLATLONG.map((item: [number, number]) => (
-            <Markerwhatever coords={item} setFunc={(value) => {
-              const arrays = [...arratLATLONG];
-              console.log(value, 'newvalue');
-              arrays.push(value);
-              setArratLATLONG(arrays);
-            }} />
-          ))
-        }
+        { arratLATLONG.length > 0 && arratLATLONG.map((item: [number, number]) => {
+          if(item){
+            return(
+              <Markerwhatever
+                coords={item}
+                // openModal={(lat, long) => {
+                //   setIsModal(true);
+                // }}
+                addCoordinates={(value) => {
+                  setLatitude(value.latitude);
+                  setLongitude(value.longitude);
+                  setIsModal(true);
+                }}
+                setFunc={(value) => {
+                  setArratLATLONG((state: [number, number][]) => {
+                    return [...state, value];
+                  });
+                }}
+              />
+            )
+          }
+          })}
       </MapContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;
