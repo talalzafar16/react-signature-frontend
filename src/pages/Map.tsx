@@ -15,7 +15,7 @@ import "leaflet/dist/leaflet.css";
 import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from '../config/apiEndpoint';
 import axios, { AxiosResponse } from "axios";
-import SellPropertyModal from "@/components/SellPropertyModal";
+// import SellPropertyModal from "@/components/SellPropertyModal";
 
 
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -51,7 +51,7 @@ const svgIcon = L.divIcon({
   popupAnchor: [0, -36],
 });
 
-type Coordinates = [number, number][] | [] | undefined;
+// type Coordinates = [number, number][] | [] | undefined;
 
 type Models = {
   plotNumber: string,
@@ -68,7 +68,7 @@ interface Response {
 
 const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
   const map = useMap();
-  const mapss = useMapEvents({
+  useMapEvents({
     // click(e) {
     //   alert(`what's wrong`);
     //   console.log("new_data", e.latlng);
@@ -110,7 +110,7 @@ const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
   );
 }
 
-const Markerwhatever: FC<any> = ({ coords, setFunc, addCoordinates }) => {
+const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
   const map = useMap();
   // const mapss = useMapEvents({
   //   click(e) {
@@ -164,7 +164,7 @@ const Map = () => {
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
   ]);
-  const [draggableMarker, setDraggableMarker] = useState<boolean>(true);
+  const draggableMarker = true;
 
   
   useLayoutEffect(() => {
