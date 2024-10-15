@@ -1,11 +1,11 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useLayoutEffect } from "react";
 import {
   MapContainer,
   TileLayer,
   Popup,
   Marker,
   ImageOverlay,
-  useMapEvents,
+  useMapEvents
 } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
 import L from "leaflet";
@@ -53,33 +53,85 @@ const svgIcon = L.divIcon({
 
 type Coordinates = [number, number][] | [] | undefined;
 
+type Models = {
+  plotNumber: string,
+  latitude: number,
+  longitude: number
+}
+
+type newModels = Models | undefined | [];
+
 interface Response {
-  data: Coordinates,
+  data: Models[],
   message: string
 }
 
-const Markerwhatever: FC<any> = ({ coords, setFunc, addCoordinates }) => {
+const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
   const map = useMap();
   const mapss = useMapEvents({
+    // click(e) {
+    //   alert(`what's wrong`);
+    //   console.log("new_data", e.latlng);
+    // },
     click(e) {
       console.log(e.latlng, "new_data");
-      setFunc(e.latlng);
-      addCoordinates(e.latlng)
+      setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+      addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng});
+      
     },
   });
-  const postionss: [number, number] =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
-  console.log('new_point', postionss);
+  console.log(typeof coords ,'new_point', coords);
+  // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
   return (
     <div>
       <Marker
         // @ts-ignore
         icon={svgIcon}
-        position={[parseInt(coords['latitude']), parseInt(coords['longitude'])]}
+        position={[coords['latitude'], coords['longitude']]}
         eventHandlers={{
           click: (e) => {
             map.flyTo(e.latlng, 17);
             console.log("target", e.latlng);
-            setFunc(e.latlng);
+            setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+            addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
+
+            // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
+            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
+            // )
+            // )
+          }
+        }}
+      >
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </div>
+  );
+}
+
+const Markerwhatever: FC<any> = ({ coords, setFunc, addCoordinates }) => {
+  const map = useMap();
+  // const mapss = useMapEvents({
+  //   click(e) {
+  //     console.log(e.latlng, "new_data");
+  //     setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+  //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
+  //   },
+  // });
+  // console.log(typeof coords ,'new_point', coords);
+  // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
+  return (
+    <div>
+      <Marker
+        // @ts-ignore
+        icon={svgIcon}
+        position={[coords['latitude'], coords['longitude']]}
+        eventHandlers={{
+          click: (e) => {
+            map.flyTo(e.latlng, 17);
+            console.log("target", e.latlng);
+            setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
 
             // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
             //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
@@ -95,14 +147,16 @@ const Markerwhatever: FC<any> = ({ coords, setFunc, addCoordinates }) => {
     </div>
   );
 };
+
 const Map = () => {
   // const = [51.505, -0.09]
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModal, setIsModal] = useState<boolean>(false);
   const [latitude, setLatitude] = useState<number>(0)
   const [longitude, setLongitude] = useState<number>(0)
-  const [arratLATLONG, setArratLATLONG] = useState<Coordinates>([
+  const [arratLATLONG, setArratLATLONG] = useState<Models[]| []>([
     // [31.462254, 74.196334],
+    // {latitude: 31.462254, longitude: 74.196334, plotNumber: '2020' }
     // [31.463052, 74.194269],
     // [31.467729, 74.184702],
     // [31.47226, 74.189333],
@@ -110,14 +164,17 @@ const Map = () => {
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
   ]);
+  const [draggableMarker, setDraggableMarker] = useState<boolean>(true);
 
-  useEffect(() => {
+  
+  useLayoutEffect(() => {
     axios.get(`${API_ENDPOINT}/plots/get-plot`)
       .then((res: AxiosResponse<Response>) => {
         console.log('respoonse_data', res.data.data)
         setArratLATLONG(res.data.data);
       })
   }, [])
+
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
 
@@ -139,23 +196,14 @@ const Map = () => {
           <h1 className="text-2xl text-primary">Loading ...</h1>
         </div>
       )}
-      <MapContainer
-        // @ts-ignore
-        center={[31.46081, 74.18806]}
-        dragging={false}
-        whenReady={() => {
-          setTimeout(() => setIsLoading(false), 10000);
-        }}
-        zoom={17}
-        scrollWheelZoom={false}
-      >
-        {/* @ts-ignore */}
-        {isModal && (
+      {/* @ts-ignore */}
+      {isModal && (
           <Modal
+          closeModal={()=>setIsModal(false)}
             toggle={(plot) => {
               console.log('check_', latitude, longitude, plot);
               if (latitude && longitude && plot) {
-                axios.post(`${API_ENDPOINT}/plots/add-plot`, { plotNumber: plot, latitude: latitude, longitude: longitude }).then(res1 => { console.log(res1); setIsModal(false); });
+                axios.post(`${API_ENDPOINT}/plots/add-plot`, { plotNumber: plot, latitude: latitude, longitude: longitude }).then(res1 => { console.log(res1); setIsModal(false); window.location.reload(); });
                 // fetch(`${API_ENDPOINT}/plots/add-plot`, {
                 //   method: "POST",
                 //   body: JSON.stringify({ plotNumber: plot, latitude: latitude, longitude: longitude })
@@ -168,6 +216,22 @@ const Map = () => {
             }}
           />
         )}
+        {/* <span
+        className="bg-yellow-400 h-12"
+        onClick={() => {
+          setDraggableMarker((state) => !state);
+        }}>Toggle Draggable!</span> */}
+      <MapContainer
+        // @ts-ignore
+        center={[31.46081, 74.18806]}
+        dragging={draggableMarker}
+        whenReady={() => {
+          setTimeout(() => setIsLoading(false), 7000);
+        }}
+        zoom={17}
+        scrollWheelZoom={false}
+      >
+        
         <TileLayer
           // @ts-ignore
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -195,7 +259,23 @@ const Map = () => {
       A pretty CSS3 popup. <br /> Easily customizable.
     </Popup>
   </Marker> */}
-        { arratLATLONG.length > 0 && arratLATLONG.map((item: [number, number]) => {
+  <LocationMarker
+   coords={{latitude: 31.462254, longitude: 74.196334, plotNumber: '2020' }}
+   // openModal={(lat, long) => {
+   //   setIsModal(true);
+   // }}
+   addCoordinates={(value) => {
+     setLatitude(value.latitude);
+     setLongitude(value.longitude);
+     setIsModal(true);
+   }}
+   setFunc={(value) => {
+     setArratLATLONG((state: newModels[]) => {
+       return [...state, value];
+     });
+   }}
+  />
+        { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
           if(item){
             return(
               <Markerwhatever
@@ -209,7 +289,7 @@ const Map = () => {
                   setIsModal(true);
                 }}
                 setFunc={(value) => {
-                  setArratLATLONG((state: [number, number][]) => {
+                  setArratLATLONG((state: newModels[]) => {
                     return [...state, value];
                   });
                 }}
@@ -223,3 +303,5 @@ const Map = () => {
 };
 
 export default Map;
+
+
