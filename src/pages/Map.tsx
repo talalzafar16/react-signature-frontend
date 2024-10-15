@@ -200,11 +200,11 @@ const Map = () => {
       {isModal && (
           <Modal
           closeModal={()=>setIsModal(false)}
-            toggle={(plot) => {
-              console.log('check_', latitude, longitude, plot);
-              if (latitude && longitude && plot) {
+            toggle={(plot, blockName) => {
+              console.log('check_', latitude, longitude, plot, blockName);
+              if (latitude && longitude && plot && blockName) {
                 // setIsLoading(true);
-                axios.post(`${API_ENDPOINT}/plots/add-plot`, { plotNumber: plot, latitude: latitude, longitude: longitude }).then(res1 => { console.log(res1); setIsModal(false); window.location.reload(); });
+                axios.post(`${API_ENDPOINT}/plots/add-plot`, { plotNumber: plot, latitude: latitude, longitude: longitude, blockName:blockName }).then(res1 => { console.log(res1); setIsModal(false); window.location.reload(); });
                 // fetch(`${API_ENDPOINT}/plots/add-plot`, {
                 //   method: "POST",
                 //   body: JSON.stringify({ plotNumber: plot, latitude: latitude, longitude: longitude })
