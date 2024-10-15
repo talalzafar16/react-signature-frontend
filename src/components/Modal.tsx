@@ -21,7 +21,7 @@ const Modal = ({ toggle, closeModal }) => {
         'Overseas Block',
         'Sapphire Block',
         'Topaz Extension Block',
-    ]
+    ];
 
     return (
         <div className="absolute z-[328472384728478248248274] backdrop-blur-xl bg-black/30 h-full w-full flex justify-center items-center">
