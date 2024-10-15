@@ -203,6 +203,7 @@ const Map = () => {
             toggle={(plot) => {
               console.log('check_', latitude, longitude, plot);
               if (latitude && longitude && plot) {
+                // setIsLoading(true);
                 axios.post(`${API_ENDPOINT}/plots/add-plot`, { plotNumber: plot, latitude: latitude, longitude: longitude }).then(res1 => { console.log(res1); setIsModal(false); window.location.reload(); });
                 // fetch(`${API_ENDPOINT}/plots/add-plot`, {
                 //   method: "POST",
@@ -260,7 +261,7 @@ const Map = () => {
     </Popup>
   </Marker> */}
   <LocationMarker
-   coords={{latitude: 31.462254, longitude: 74.196334, plotNumber: '2020' }}
+   coords={{latitude: 31.45001885385682, longitude: 74.20307636260988, plotNumber: '2020' }}
    // openModal={(lat, long) => {
    //   setIsModal(true);
    // }}
