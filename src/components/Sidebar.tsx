@@ -3,6 +3,7 @@ import { FaBuilding } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { BsBuildingFillAdd } from "react-icons/bs";
+import { IoIosPeople } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
@@ -30,6 +31,12 @@ const data = [
     icon: <BsBuildingFillAdd size={iconSize} color={iconColor} />,
     selectedIcon: <BsBuildingFillAdd size={iconSize} color={selectedIconColor} />,
     link: "/home/addProperty",
+  },
+  {
+    name: "Sellers Listing",
+    icon: <IoIosPeople size={iconSize} color={iconColor} />,
+    selectedIcon: <IoIosPeople size={iconSize} color={selectedIconColor} />,
+    link: "/home/sellers",
   },
   {
     name: "Setting",
