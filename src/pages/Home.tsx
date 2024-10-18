@@ -4,6 +4,7 @@ import DisplayProperties from "./DisplayProperties";
 import AddProperty from "./AddProperty";
 import Settings from "./Settings";
 import Sidebar from "@/components/Sidebar";
+import DisplaySellers from "./DisplaySellers";
 
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
           <Route path="listings" element={<DisplayProperties />} />
           <Route path="addProperty" element={<AddProperty />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="sellers" element={<DisplaySellers />} />
         </Routes>
       </div>
     </div>
