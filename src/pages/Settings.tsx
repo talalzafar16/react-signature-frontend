@@ -8,7 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import "react-phone-number-input/style.css";
+
 
 const Settings = () => {
   const [sellerInfo, setSellerInfo] = useState({
