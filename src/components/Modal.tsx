@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const Modal = ({ toggle, closeModal }) => {
     const [plot, setPlot] = useState<string | undefined>('');
-    const [blockName, setBlockName] = useState<string | undefined>('');
+    const [blockName, setBlockName] = useState<string | undefined>('Tulip Extension Block');
     const blockList: any = [
         'Tulip Extension Block',
         'Diamond Block',
