@@ -227,7 +227,7 @@ const Map = () => {
         center={[31.46081, 74.18806]}
         dragging={draggableMarker}
         whenReady={() => {
-          setTimeout(() => setIsLoading(false), 7000);
+          setTimeout(() => setIsLoading(false), 3000);
         }}
         zoom={17}
         scrollWheelZoom={false}

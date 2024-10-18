@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const Modal = ({ toggle, closeModal }) => {
-    const [plot, setPlot] = useState<number | undefined>(0);
+    const [plot, setPlot] = useState<string | undefined>('');
     const [blockName, setBlockName] = useState<string | undefined>('');
     const blockList: any = [
         'Tulip Extension Block',
@@ -33,8 +33,8 @@ const Modal = ({ toggle, closeModal }) => {
                 <div className="flex flex-col">
                     {/* <input className="border border-stone-600" type="text" placeholder="latitude"  />
                     <input className="border border-stone-600" type="text" placeholder="longitude" /> */}
-                    <input className="border border-stone-600" type="number" value={plot} onChange={(e: React.FormEvent<HTMLInputElement>) => {
-                        const values = Number((e.target as HTMLInputElement).value);
+                    <input className="border border-stone-600" type="text" value={plot} onChange={(e: React.FormEvent<HTMLInputElement>) => {
+                        const values = (e.target as HTMLInputElement).value;
                         setPlot(values);
                     }} />
                     <h2>Block Name</h2>
