@@ -12,10 +12,10 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+          <Route path="/map" element={<Map />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/home/*" element={<Home />} />
-          <Route path="/map" element={<Map />} />
           <Route path="/excelListing" element={<ExcelListing />} />
           <Route path="/displayExcelData/:id" element={<DisplayExcelData />} />
         </Route>
