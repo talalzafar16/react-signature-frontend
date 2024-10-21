@@ -141,7 +141,8 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
         }}
       >
         <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
+          {coords['plotNumber']}
+          {/* A pretty CSS3 popup. <br /> Easily customizable. */}
         </Popup>
       </Marker>
     </div>
