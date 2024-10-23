@@ -67,6 +67,7 @@ interface Response {
 }
 
 const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
+  const [coordinates, setCoordinates] = useState({})
   const map = useMap();
   useMapEvents({
     // click(e) {
@@ -75,8 +76,10 @@ const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
     // },
     click(e) {
       console.log(e.latlng, "new_data");
-      setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
-      addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng});
+      setCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
+      alert(`latitude: ${e.latlng.lat}, longitude: ${e.latlng.lng}`)
+      // setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+      // addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng});
       
     },
   });
@@ -103,7 +106,9 @@ const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
         }}
       >
         <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
+        latitude: {coordinates['latitude']}
+        <br/> 
+        longitude: {coordinates['longitude']}
         </Popup>
       </Marker>
     </div>
@@ -122,7 +127,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
   // console.log(typeof coords ,'new_point', coords);
   // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
   return (
-    <div>
+    <div >
       <Marker
         // @ts-ignore
         icon={svgIcon}
@@ -142,6 +147,10 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
       >
         <Popup>
           {coords['plotNumber']}
+          <br />
+          latitude: {coords['latitude']}
+          <br/>
+          longitude: {coords['longitude']}
           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
         </Popup>
       </Marker>
@@ -281,6 +290,7 @@ const Map = () => {
           if(item){
             return(
               <Markerwhatever
+              key={item._id}
                 coords={item}
                 // openModal={(lat, long) => {
                 //   setIsModal(true);
