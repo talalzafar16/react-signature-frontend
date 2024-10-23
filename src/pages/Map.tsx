@@ -1,4 +1,4 @@
-import { FC, useState, useLayoutEffect } from "react";
+import { FC, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -14,7 +14,7 @@ import "../App.css";
 import "leaflet/dist/leaflet.css";
 import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from '../config/apiEndpoint';
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 // import SellPropertyModal from "@/components/SellPropertyModal";
 
 
@@ -164,7 +164,7 @@ const Map = () => {
   const [isModal, setIsModal] = useState<boolean>(false);
   const [latitude, setLatitude] = useState<number>(0)
   const [longitude, setLongitude] = useState<number>(0)
-  const [arratLATLONG, setArratLATLONG] = useState<Models[]| []>([
+  // const [arratLATLONG, setArratLATLONG] = useState<Models[]| []>([
     // [31.462254, 74.196334],
     // {latitude: 31.462254, longitude: 74.196334, plotNumber: '2020' }
     // [31.463052, 74.194269],
@@ -173,17 +173,17 @@ const Map = () => {
     // [31.466812595250545, 74.18388783931734],
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
-  ]);
+  // ]);
   const draggableMarker = true;
 
   
-  useLayoutEffect(() => {
-    axios.get(`${API_ENDPOINT}/plots/get-plot`)
-      .then((res: AxiosResponse<Response>) => {
-        console.log('respoonse_data', res.data.data)
-        setArratLATLONG(res.data.data);
-      })
-  }, [])
+  // useLayoutEffect(() => {
+  //   axios.get(`${API_ENDPOINT}/plots/get-plot`)
+  //     .then((res: AxiosResponse<Response>) => {
+  //       console.log('respoonse_data', res.data.data)
+  //       setArratLATLONG(res.data.data);
+  //     })
+  // }, [])
 
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
@@ -281,9 +281,9 @@ const Map = () => {
      setIsModal(true);
    }}
    setFunc={(value) => {
-     setArratLATLONG((state: newModels[]) => {
-       return [...state, value];
-     });
+    //  setArratLATLONG((state: newModels[]) => {
+    //    return [...state, value];
+    //  });
    }}
   />
         {/* { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
