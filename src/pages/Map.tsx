@@ -286,7 +286,7 @@ const Map = () => {
      });
    }}
   />
-        { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
+        {/* { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
           if(item){
             return(
               <Markerwhatever
@@ -307,7 +307,7 @@ const Map = () => {
               />
             )
           }
-          })}
+          })} */}
       </MapContainer>
     </div>
   );
