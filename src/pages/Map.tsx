@@ -290,7 +290,6 @@ const Map = () => {
           if(item){
             return(
               <Markerwhatever
-              key={item._id}
                 coords={item}
                 // openModal={(lat, long) => {
                 //   setIsModal(true);
