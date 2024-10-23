@@ -115,48 +115,48 @@ const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
   );
 }
 
-const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
-  const map = useMap();
-  // const mapss = useMapEvents({
-  //   click(e) {
-  //     console.log(e.latlng, "new_data");
-  //     setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
-  //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
-  //   },
-  // });
-  // console.log(typeof coords ,'new_point', coords);
-  // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
-  return (
-    <div >
-      <Marker
-        // @ts-ignore
-        icon={svgIcon}
-        position={[coords['latitude'], coords['longitude']]}
-        eventHandlers={{
-          click: (e) => {
-            map.flyTo(e.latlng, 17);
-            console.log("target", e.latlng);
-            setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+// const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
+//   const map = useMap();
+//   // const mapss = useMapEvents({
+//   //   click(e) {
+//   //     console.log(e.latlng, "new_data");
+//   //     setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+//   //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
+//   //   },
+//   // });
+//   // console.log(typeof coords ,'new_point', coords);
+//   // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
+//   return (
+//     <div >
+//       <Marker
+//         // @ts-ignore
+//         icon={svgIcon}
+//         position={[coords['latitude'], coords['longitude']]}
+//         eventHandlers={{
+//           click: (e) => {
+//             map.flyTo(e.latlng, 17);
+//             console.log("target", e.latlng);
+//             setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
 
-            // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
-            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
-            // )
-            // )
-          }
-        }}
-      >
-        <Popup>
-          {coords['plotNumber']}
-          <br />
-          latitude: {coords['latitude']}
-          <br/>
-          longitude: {coords['longitude']}
-          {/* A pretty CSS3 popup. <br /> Easily customizable. */}
-        </Popup>
-      </Marker>
-    </div>
-  );
-};
+//             // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
+//             //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
+//             // )
+//             // )
+//           }
+//         }}
+//       >
+//         <Popup>
+//           {coords['plotNumber']}
+//           <br />
+//           latitude: {coords['latitude']}
+//           <br/>
+//           longitude: {coords['longitude']}
+//           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
+//         </Popup>
+//       </Marker>
+//     </div>
+//   );
+// };
 
 const Map = () => {
   // const = [51.505, -0.09]
