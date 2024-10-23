@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useLayoutEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -14,7 +14,7 @@ import "../App.css";
 import "leaflet/dist/leaflet.css";
 import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from '../config/apiEndpoint';
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 // import SellPropertyModal from "@/components/SellPropertyModal";
 
 
@@ -115,48 +115,48 @@ const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) =>  {
   );
 }
 
-// const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
-//   const map = useMap();
-//   // const mapss = useMapEvents({
-//   //   click(e) {
-//   //     console.log(e.latlng, "new_data");
-//   //     setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
-//   //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
-//   //   },
-//   // });
-//   // console.log(typeof coords ,'new_point', coords);
-//   // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
-//   return (
-//     <div >
-//       <Marker
-//         // @ts-ignore
-//         icon={svgIcon}
-//         position={[coords['latitude'], coords['longitude']]}
-//         eventHandlers={{
-//           click: (e) => {
-//             map.flyTo(e.latlng, 17);
-//             console.log("target", e.latlng);
-//             setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
+  const map = useMap();
+  // const mapss = useMapEvents({
+  //   click(e) {
+  //     console.log(e.latlng, "new_data");
+  //     setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+  //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
+  //   },
+  // });
+  // console.log(typeof coords ,'new_point', coords);
+  // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
+  return (
+    <div >
+      <Marker
+        // @ts-ignore
+        icon={svgIcon}
+        position={[coords['latitude'], coords['longitude']]}
+        eventHandlers={{
+          click: (e) => {
+            map.flyTo(e.latlng, 17);
+            console.log("target", e.latlng);
+            setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
 
-//             // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
-//             //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
-//             // )
-//             // )
-//           }
-//         }}
-//       >
-//         <Popup>
-//           {coords['plotNumber']}
-//           <br />
-//           latitude: {coords['latitude']}
-//           <br/>
-//           longitude: {coords['longitude']}
-//           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
-//         </Popup>
-//       </Marker>
-//     </div>
-//   );
-// };
+            // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
+            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
+            // )
+            // )
+          }
+        }}
+      >
+        <Popup>
+          {coords['plotNumber']}
+          <br />
+          latitude: {coords['latitude']}
+          <br/>
+          longitude: {coords['longitude']}
+          {/* A pretty CSS3 popup. <br /> Easily customizable. */}
+        </Popup>
+      </Marker>
+    </div>
+  );
+};
 
 const Map = () => {
   // const = [51.505, -0.09]
@@ -164,7 +164,7 @@ const Map = () => {
   const [isModal, setIsModal] = useState<boolean>(false);
   const [latitude, setLatitude] = useState<number>(0)
   const [longitude, setLongitude] = useState<number>(0)
-  // const [arratLATLONG, setArratLATLONG] = useState<Models[]| []>([
+  const [arratLATLONG, setArratLATLONG] = useState<Models[]| []>([
     // [31.462254, 74.196334],
     // {latitude: 31.462254, longitude: 74.196334, plotNumber: '2020' }
     // [31.463052, 74.194269],
@@ -173,17 +173,17 @@ const Map = () => {
     // [31.466812595250545, 74.18388783931734],
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
-  // ]);
+  ]);
   const draggableMarker = true;
 
   
-  // useLayoutEffect(() => {
-  //   axios.get(`${API_ENDPOINT}/plots/get-plot`)
-  //     .then((res: AxiosResponse<Response>) => {
-  //       console.log('respoonse_data', res.data.data)
-  //       setArratLATLONG(res.data.data);
-  //     })
-  // }, [])
+  useLayoutEffect(() => {
+    axios.get(`${API_ENDPOINT}/plots/get-plot`)
+      .then((res: AxiosResponse<Response>) => {
+        console.log('respoonse_data', res.data.data)
+        setArratLATLONG([]);
+      })
+  }, [])
 
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
@@ -281,15 +281,16 @@ const Map = () => {
      setIsModal(true);
    }}
    setFunc={(value) => {
-    //  setArratLATLONG((state: newModels[]) => {
-    //    return [...state, value];
-    //  });
+     setArratLATLONG((state: newModels[]) => {
+       return [...state, value];
+     });
    }}
   />
-        {/* { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
+        { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
           if(item){
             return(
               <Markerwhatever
+              // key={item}
                 coords={item}
                 // openModal={(lat, long) => {
                 //   setIsModal(true);
@@ -307,7 +308,7 @@ const Map = () => {
               />
             )
           }
-          })} */}
+          })}
       </MapContainer>
     </div>
   );
