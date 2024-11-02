@@ -152,9 +152,15 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
         <Popup>
           {coords['Plot Number']}
           <br />
-          latitude: {coords['latitude']}
+          Block: {coords['Block']}
           <br/>
-          longitude: {coords['longitude']}
+          Status: {coords['Status']}
+          <br/>
+
+          Area in Marl: {coords['Area in Marl']}
+         
+          <br/>
+          Demand: {coords['Demand']} lacs
           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
         </Popup>
       </Marker>
