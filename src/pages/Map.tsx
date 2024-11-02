@@ -150,7 +150,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
         }}
       >
         <Popup>
-          {coords['Plot Number']}
+        Plot Number: {coords['Plot Number']}
           <br />
           Block: {coords['Block']}
           <br/>
