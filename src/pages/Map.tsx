@@ -124,14 +124,18 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
   //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
   //   },
   // });
-  // console.log(typeof coords ,'new_point', coords);
+  if(coords['latitude']==undefined || coords['longitude']==undefined){
+    return
+  }
+  // console.log(typeof coords ,'lol', [parseFloat(coords['latitude'].toFixed(4)), parseFloat(coords['longitude'].toFixed(4))]);
   // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
   return (
     <div >
       <Marker
         // @ts-ignore
         icon={svgIcon}
-        position={[coords['latitude'], coords['longitude']]}
+        position={[coords['latitude'], 
+          coords['longitude']]}
         eventHandlers={{
           click: (e) => {
             map.flyTo(e.latlng, 17);
@@ -146,7 +150,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
         }}
       >
         <Popup>
-          {coords['plotNumber']}
+          {coords['Plot Number']}
           <br />
           latitude: {coords['latitude']}
           <br/>
@@ -178,10 +182,12 @@ const Map = () => {
 
   
   useLayoutEffect(() => {
-    axios.get(`${API_ENDPOINT}/plots/get-plot`)
+    axios.get(`${API_ENDPOINT}/users/get-plots`)
       .then((res: AxiosResponse<Response>) => {
-        console.log('respoonse_data', res.data.data)
-        setArratLATLONG([]);
+        // @ts-ignore
+
+        // @ts-ignore
+        setArratLATLONG([...res.data]);
       })
   }, [])
 
@@ -281,12 +287,12 @@ const Map = () => {
      setIsModal(true);
    }}
    setFunc={(value) => {
-     setArratLATLONG((state: newModels[]) => {
+     setArratLATLONG((state: any[]) => {
        return [...state, value];
      });
    }}
   />
-        { arratLATLONG.length > 0 && arratLATLONG.map((item: newModels) => {
+        { arratLATLONG.length > 0 && arratLATLONG.map((item: any) => {
           if(item){
             return(
               <Markerwhatever
