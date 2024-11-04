@@ -10,22 +10,23 @@ const SearchBar = ({ data, setSearchedPlot }: any) => {
     const BlockSet = new Set();
     data.forEach((e) => BlockSet.add(e.Block));
     return Array.from(BlockSet as Set<string>).map((value, i) => ({
-      value: value.toLowerCase(),
+      value: value?.toLowerCase(),
       id: i,
       label: value,
     }));
   }, [data]);
   useEffect(() => {
     const filteredPlotDetails = data.filter(
-      (property) => property.Block.toLowerCase() === selectedBlock.toLowerCase()
+      (property) =>
+        property.Block?.toLowerCase() === selectedBlock?.toLowerCase()
     );
     const uniquePlotEntries = new Set(filteredPlotDetails);
     console.log(uniquePlotEntries, "lol");
     const distinctPlotArray = [...uniquePlotEntries];
 
     const plotOptions = distinctPlotArray.map((plotDetail, index) => ({
-      id: `${plotDetail["Plot Number"].toLowerCase()}-${index}`,
-      value: plotDetail["Plot Number"].toLowerCase(),
+      id: `${plotDetail["Plot Number"]?.toLowerCase()}-${index}`,
+      value: plotDetail["Plot Number"]?.toLowerCase(),
       label: plotDetail["Plot Number"],
     }));
 

@@ -201,7 +201,24 @@ const Map = () => {
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
         <SearchBar data={arratLATLONG} setSearchedPlot={setSearchedPlot} />
+        {searchedPlot.length > 0 && (
+          <div className="bg-white mt-4 rounded-lg p-4 ">
+            <div className="text-center font-bold mb-2">Details</div>
+            Plot Number:{" "}
+            {searchedPlot.length > 0 && searchedPlot[0]["Plot Number"]}
+            <br />
+            Block: {searchedPlot.length > 0 && searchedPlot[0]["Block"]}
+            <br />
+            Status: {searchedPlot.length > 0 && searchedPlot[0]["Status"]}
+            <br />
+            Area in Marl:{" "}
+            {searchedPlot.length > 0 && searchedPlot[0]["Area in Marl"]}
+            <br />
+            Demand: {searchedPlot.length > 0 && searchedPlot[0]["Demand"]} lacs
+          </div>
+        )}
       </div>
+
       {isLoading && (
         <div
           style={{
