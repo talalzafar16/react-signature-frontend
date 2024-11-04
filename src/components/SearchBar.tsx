@@ -44,8 +44,8 @@ const SearchBar = ({ data, setSearchedPlot }: any) => {
     setSearchedPlot(
       data.filter(
         (e) =>
-          e.Block.toLowerCase() === selectedBlock.toLowerCase() &&
-          e["Plot Number"].toLowerCase() == selectedPlot
+          e.Block?.toLowerCase() === selectedBlock?.toLowerCase() &&
+          e["Plot Number"]?.toLowerCase() == selectedPlot
       )
     );
   }, [selectedPlot]);

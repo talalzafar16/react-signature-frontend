@@ -17,7 +17,8 @@ import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import SearchBar from "@/components/SearchBar";
 // import SellPropertyModal from "@/components/SellPropertyModal";
-
+import { FaPhone } from "react-icons/fa6";
+import { MdMarkEmailRead } from "react-icons/md";
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
     <title>map-marker</title>
@@ -150,6 +151,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
         }}
       >
         <Popup>
+          <div className="text-center font-bold mb-2">Details</div>
           Plot Number: {coords["Plot Number"]}
           <br />
           Block: {coords["Block"]}
@@ -160,6 +162,19 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
           <br />
           Demand: {coords["Demand"]} lacs
           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
+          <div className="w-full py-2 flex justify-center gap-2 flex-col">
+            <a
+              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white  rounded-lg"
+              href="#"
+            >
+              <p className="text-white ">Contact Us</p>
+              <FaPhone color={"white"} />
+            </a>
+            <button className="bg-green-700 h-8 flex justify-center items-center gap-2   p-2 rounded-lg text-white">
+              <p className="text-white ">Send Enquiry</p>
+              <MdMarkEmailRead color={"white"} />
+            </button>
+          </div>
         </Popup>
       </Marker>
     </div>
@@ -215,6 +230,19 @@ const Map = () => {
             {searchedPlot.length > 0 && searchedPlot[0]["Area in Marl"]}
             <br />
             Demand: {searchedPlot.length > 0 && searchedPlot[0]["Demand"]} lacs
+            <div className="w-full py-2 flex justify-center gap-2 flex-col">
+              <a
+                className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white  rounded-lg"
+                href="#"
+              >
+                <p className="text-white ">Contact Us</p>
+                <FaPhone color={"white"} />
+              </a>
+              <button className="bg-green-700 h-8 flex justify-center items-center gap-2   p-2 rounded-lg text-white">
+                <p className="text-white ">Send Enquiry</p>
+                <MdMarkEmailRead color={"white"} />
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -326,6 +354,31 @@ const Map = () => {
             });
           }}
         /> */}
+        {arratLATLONG.length > 0 &&
+          searchedPlot.length == 0 &&
+          arratLATLONG.map((item: any) => {
+            if (item) {
+              return (
+                <Markerwhatever
+                  // key={item}
+                  coords={item}
+                  // openModal={(lat, long) => {
+                  //   setIsModal(true);
+                  // }}
+                  addCoordinates={(value) => {
+                    setLatitude(value.latitude);
+                    setLongitude(value.longitude);
+                    setIsModal(true);
+                  }}
+                  setFunc={(value) => {
+                    setArratLATLONG((state: newModels[]) => {
+                      return [...state, value];
+                    });
+                  }}
+                />
+              );
+            }
+          })}
         {searchedPlot.length > 0 &&
           searchedPlot.map((item: any) => {
             if (item) {
