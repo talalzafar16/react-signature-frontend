@@ -5,7 +5,7 @@ import {
   Popup,
   Marker,
   ImageOverlay,
-  useMapEvents,
+  // useMapEvents,
 } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
 import L from "leaflet";
@@ -66,53 +66,53 @@ interface Response {
   message: string;
 }
 
-const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) => {
-  const [coordinates, setCoordinates] = useState({});
-  const map = useMap();
-  useMapEvents({
-    // click(e) {
-    //   alert(`what's wrong`);
-    //   console.log("new_data", e.latlng);
-    // },
-    click(e) {
-      console.log(e.latlng, "new_data");
-      setCoordinates({ latitude: e.latlng.lat, longitude: e.latlng.lng });
-      alert(`latitude: ${e.latlng.lat}, longitude: ${e.latlng.lng}`);
-      // setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
-      // addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng});
-    },
-  });
-  console.log(typeof coords, "new_point", coords);
-  // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
-  return (
-    <div>
-      <Marker
-        // @ts-ignore
-        icon={svgIcon}
-        position={[coords["latitude"], coords["longitude"]]}
-        eventHandlers={{
-          click: (e) => {
-            map.flyTo(e.latlng, 17);
-            console.log("target", e.latlng);
-            setFunc({ latitude: e.latlng.lat, longitude: e.latlng.lng });
-            addCoordinates({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+// const LocationMarker: FC<any> = ({ coords, setFunc, addCoordinates }) => {
+//   const [coordinates, setCoordinates] = useState({});
+//   const map = useMap();
+//   useMapEvents({
+//     // click(e) {
+//     //   alert(`what's wrong`);
+//     //   console.log("new_data", e.latlng);
+//     // },
+//     click(e) {
+//       console.log(e.latlng, "new_data");
+//       setCoordinates({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+//       alert(`latitude: ${e.latlng.lat}, longitude: ${e.latlng.lng}`);
+//       // setFunc({latitude: e.latlng.lat, longitude: e.latlng.lng});
+//       // addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng});
+//     },
+//   });
+//   console.log(typeof coords, "new_point", coords);
+//   // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
+//   return (
+//     <div>
+//       <Marker
+//         // @ts-ignore
+//         icon={svgIcon}
+//         position={[coords["latitude"], coords["longitude"]]}
+//         eventHandlers={{
+//           click: (e) => {
+//             map.flyTo(e.latlng, 17);
+//             console.log("target", e.latlng);
+//             setFunc({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+//             addCoordinates({ latitude: e.latlng.lat, longitude: e.latlng.lng });
 
-            // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
-            //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
-            // )
-            // )
-          },
-        }}
-      >
-        <Popup>
-          latitude: {coordinates["latitude"]}
-          <br />
-          longitude: {coordinates["longitude"]}
-        </Popup>
-      </Marker>
-    </div>
-  );
-};
+//             // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
+//             //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
+//             // )
+//             // )
+//           },
+//         }}
+//       >
+//         <Popup>
+//           latitude: {coordinates["latitude"]}
+//           <br />
+//           longitude: {coordinates["longitude"]}
+//         </Popup>
+//       </Marker>
+//     </div>
+//   );
+// };
 
 const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
   const map = useMap();
