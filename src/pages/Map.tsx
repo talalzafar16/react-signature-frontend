@@ -164,15 +164,23 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
           <div className="w-full py-2 flex justify-center gap-2 flex-col">
             <a
-              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white  rounded-lg"
-              href="#"
+              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
+              href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
+              target="_blank" // Opens in a new tab
+              rel="noopener noreferrer"
             >
-              <p className="text-white ">Contact Us</p>
-              <FaPhone color={"white"} />
+              <p className="text-white">Contact Us</p>
+              <FaPhone color="white" />
             </a>
-            <button className="bg-green-700 h-8 flex justify-center items-center gap-2   p-2 rounded-lg text-white">
-              <p className="text-white ">Send Enquiry</p>
-              <MdMarkEmailRead color={"white"} />
+
+            <button
+              className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+              onClick={() => {
+                window.location.href = "mailto:sheraz0300@gmail.com"; // Replace 'youremail@example.com' with the actual email address
+              }}
+            >
+              <p className="text-white">Send Enquiry</p>
+              <MdMarkEmailRead color="white" />
             </button>
           </div>
         </Popup>
@@ -231,18 +239,26 @@ const Map = () => {
             <br />
             Demand: {searchedPlot.length > 0 && searchedPlot[0]["Demand"]} lacs
             <div className="w-full py-2 flex justify-center gap-2 flex-col">
-              <a
-                className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white  rounded-lg"
-                href="#"
-              >
-                <p className="text-white ">Contact Us</p>
-                <FaPhone color={"white"} />
-              </a>
-              <button className="bg-green-700 h-8 flex justify-center items-center gap-2   p-2 rounded-lg text-white">
-                <p className="text-white ">Send Enquiry</p>
-                <MdMarkEmailRead color={"white"} />
-              </button>
-            </div>
+            <a
+              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
+              href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
+              target="_blank" // Opens in a new tab
+              rel="noopener noreferrer"
+            >
+              <p className="text-white">Contact Us</p>
+              <FaPhone color="white" />
+            </a>
+
+            <button
+              className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+              onClick={() => {
+                window.location.href = "mailto:sheraz0300@gmail.com"; // Replace 'youremail@example.com' with the actual email address
+              }}
+            >
+              <p className="text-white">Send Enquiry</p>
+              <MdMarkEmailRead color="white" />
+            </button>
+          </div>
           </div>
         )}
       </div>
