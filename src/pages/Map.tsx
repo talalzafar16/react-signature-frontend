@@ -19,6 +19,7 @@ import SearchBar from "@/components/SearchBar";
 // import SellPropertyModal from "@/components/SellPropertyModal";
 import { FaPhone } from "react-icons/fa6";
 import { MdMarkEmailRead } from "react-icons/md";
+import EnquireyModal from "@/components/EnquireyModal";
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
     <title>map-marker</title>
@@ -115,7 +116,7 @@ interface Response {
 //   );
 // };
 
-const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
+const Markerwhatever: FC<any> = ({ coords, setFunc,setShowEnquireyModal }) => {
   const map = useMap();
   // const mapss = useMapEvents({
   //   click(e) {
@@ -176,7 +177,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
             <button
               className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
               onClick={() => {
-                window.location.href = "mailto:sheraz0300@gmail.com"; // Replace 'youremail@example.com' with the actual email address
+                setShowEnquireyModal(true); // Replace 'youremail@example.com' with the actual email address
               }}
             >
               <p className="text-white">Send Enquiry</p>
@@ -205,7 +206,8 @@ const Map = () => {
     // [31.466812595250545, 74.18388783931734],
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
-  ]);
+  ])   
+  const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false)
   const draggableMarker = true;
   useLayoutEffect(() => {
     axios
@@ -252,7 +254,7 @@ const Map = () => {
             <button
               className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
               onClick={() => {
-                window.location.href = "mailto:sheraz0300@gmail.com"; // Replace 'youremail@example.com' with the actual email address
+                setShowEnquireyModal(true) // Replace 'youremail@example.com' with the actual email address
               }}
             >
               <p className="text-white">Send Enquiry</p>
@@ -279,6 +281,8 @@ const Map = () => {
           <h1 className="text-2xl text-primary">Loading ...</h1>
         </div>
       )}
+      {showEnquireyModal&&<EnquireyModal closeModal={setShowEnquireyModal}/>}
+
       {/* @ts-ignore */}
       {isModal && (
         <Modal
@@ -386,6 +390,7 @@ const Map = () => {
                     setLongitude(value.longitude);
                     setIsModal(true);
                   }}
+                  setShowEnquireyModal={setShowEnquireyModal}
                   setFunc={(value) => {
                     setArratLATLONG((state: newModels[]) => {
                       return [...state, value];
@@ -410,6 +415,7 @@ const Map = () => {
                     setLongitude(value.longitude);
                     setIsModal(true);
                   }}
+                  setShowEnquireyModal={setShowEnquireyModal}
                   setFunc={(value) => {
                     setArratLATLONG((state: newModels[]) => {
                       return [...state, value];

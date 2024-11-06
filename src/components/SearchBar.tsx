@@ -9,8 +9,8 @@ const SearchBar = ({ data, setSearchedPlot }: any) => {
   const BlocksData = useMemo(() => {
     const BlockSet = [];
     data.forEach((e) => {
-      if (!BlockSet.includes(e.Block.toLowerCase())) {
-        BlockSet.push(e.Block.toLowerCase());
+      if (!BlockSet.includes(e.Block?.toLowerCase())) {
+        BlockSet.push(e.Block?.toLowerCase());
       }
     });
     return BlockSet.map((value, i) => ({
