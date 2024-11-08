@@ -19,6 +19,7 @@ import SearchBar from "@/components/SearchBar";
 // import SellPropertyModal from "@/components/SellPropertyModal";
 import { FaPhone } from "react-icons/fa6";
 import { MdMarkEmailRead } from "react-icons/md";
+import EnquireyModal from "@/components/EnquireyModal";
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
     <title>map-marker</title>
@@ -115,7 +116,7 @@ interface Response {
 //   );
 // };
 
-const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
+const Markerwhatever: FC<any> = ({ coords, setFunc,setShowEnquireyModal }) => {
   const map = useMap();
   // const mapss = useMapEvents({
   //   click(e) {
@@ -164,15 +165,23 @@ const Markerwhatever: FC<any> = ({ coords, setFunc }) => {
           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
           <div className="w-full py-2 flex justify-center gap-2 flex-col">
             <a
-              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white  rounded-lg"
-              href="#"
+              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
+              href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
+              target="_blank" // Opens in a new tab
+              rel="noopener noreferrer"
             >
-              <p className="text-white ">Contact Us</p>
-              <FaPhone color={"white"} />
+              <p className="text-white">Contact Us</p>
+              <FaPhone color="white" />
             </a>
-            <button className="bg-green-700 h-8 flex justify-center items-center gap-2   p-2 rounded-lg text-white">
-              <p className="text-white ">Send Enquiry</p>
-              <MdMarkEmailRead color={"white"} />
+
+            <button
+              className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+              onClick={() => {
+                setShowEnquireyModal(true); // Replace 'youremail@example.com' with the actual email address
+              }}
+            >
+              <p className="text-white">Send Enquiry</p>
+              <MdMarkEmailRead color="white" />
             </button>
           </div>
         </Popup>
@@ -197,7 +206,8 @@ const Map = () => {
     // [31.466812595250545, 74.18388783931734],
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
-  ]);
+  ])   
+  const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false)
   const draggableMarker = true;
   useLayoutEffect(() => {
     axios
@@ -231,18 +241,26 @@ const Map = () => {
             <br />
             Demand: {searchedPlot.length > 0 && searchedPlot[0]["Demand"]} lacs
             <div className="w-full py-2 flex justify-center gap-2 flex-col">
-              <a
-                className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white  rounded-lg"
-                href="#"
-              >
-                <p className="text-white ">Contact Us</p>
-                <FaPhone color={"white"} />
-              </a>
-              <button className="bg-green-700 h-8 flex justify-center items-center gap-2   p-2 rounded-lg text-white">
-                <p className="text-white ">Send Enquiry</p>
-                <MdMarkEmailRead color={"white"} />
-              </button>
-            </div>
+            <a
+              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
+              href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
+              target="_blank" // Opens in a new tab
+              rel="noopener noreferrer"
+            >
+              <p className="text-white">Contact Us</p>
+              <FaPhone color="white" />
+            </a>
+
+            <button
+              className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+              onClick={() => {
+                setShowEnquireyModal(true) // Replace 'youremail@example.com' with the actual email address
+              }}
+            >
+              <p className="text-white">Send Enquiry</p>
+              <MdMarkEmailRead color="white" />
+            </button>
+          </div>
           </div>
         )}
       </div>
@@ -263,6 +281,8 @@ const Map = () => {
           <h1 className="text-2xl text-primary">Loading ...</h1>
         </div>
       )}
+      {showEnquireyModal&&<EnquireyModal closeModal={setShowEnquireyModal}/>}
+
       {/* @ts-ignore */}
       {isModal && (
         <Modal
@@ -370,6 +390,7 @@ const Map = () => {
                     setLongitude(value.longitude);
                     setIsModal(true);
                   }}
+                  setShowEnquireyModal={setShowEnquireyModal}
                   setFunc={(value) => {
                     setArratLATLONG((state: newModels[]) => {
                       return [...state, value];
@@ -394,6 +415,7 @@ const Map = () => {
                     setLongitude(value.longitude);
                     setIsModal(true);
                   }}
+                  setShowEnquireyModal={setShowEnquireyModal}
                   setFunc={(value) => {
                     setArratLATLONG((state: newModels[]) => {
                       return [...state, value];
