@@ -1,12 +1,12 @@
 import React from "react";
 import type { FormProps } from "antd";
 import { Button, Form, Input } from "antd";
-import TextArea from "antd/es/input/TextArea";
 
 type FieldType = {
   full_name?: string;
   phone?: string;
-  message?: string;
+  block?: string;
+  plot?: string;
 };
 
 const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
@@ -17,7 +17,7 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-const ContactForm: React.FC = () => (
+const SaleContactForm: React.FC = () => (
   <Form
     name="basic"
     labelCol={{ span: 8 }}
@@ -44,11 +44,18 @@ const ContactForm: React.FC = () => (
       <Input />
     </Form.Item>
     <Form.Item<FieldType>
-      label="Message"
-      name="message"
-      rules={[{ required: true, message: "Please input your Message!" }]}
+      label="Block Name"
+      name="block"
+      rules={[{ required: true, message: "Please input your Block!" }]}
     >
-      <TextArea />
+      <Input />
+    </Form.Item>
+    <Form.Item<FieldType>
+      label="Plot Number"
+      name="plot"
+      rules={[{ required: true, message: "Please input your Plot Number!" }]}
+    >
+      <Input />
     </Form.Item>
 
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -59,4 +66,4 @@ const ContactForm: React.FC = () => (
   </Form>
 );
 
-export default ContactForm;
+export default SaleContactForm;

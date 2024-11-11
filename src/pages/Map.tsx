@@ -15,11 +15,13 @@ import "leaflet/dist/leaflet.css";
 import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
-import SearchBar from "@/components/SearchBar";
+import { TbFilterSearch } from "react-icons/tb";
 // import SellPropertyModal from "@/components/SellPropertyModal";
 import { FaPhone } from "react-icons/fa6";
-import { MdMarkEmailRead } from "react-icons/md";
+import { MdMarkEmailRead, MdOutlineSell } from "react-icons/md";
 import EnquireyModal from "@/components/EnquireyModal";
+import FilterModal from "@/components/FilterModal";
+import SaleYourPlotModal from "@/components/SaleYourPlotModal";
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
     <title>map-marker</title>
@@ -116,7 +118,7 @@ interface Response {
 //   );
 // };
 
-const Markerwhatever: FC<any> = ({ coords, setFunc,setShowEnquireyModal }) => {
+const Markerwhatever: FC<any> = ({ coords, setFunc, setShowEnquireyModal }) => {
   const map = useMap();
   // const mapss = useMapEvents({
   //   click(e) {
@@ -125,11 +127,11 @@ const Markerwhatever: FC<any> = ({ coords, setFunc,setShowEnquireyModal }) => {
   //     addCoordinates({latitude: e.latlng.lat, longitude: e.latlng.lng})
   //   },
   // });
+
   if (coords["latitude"] == undefined || coords["longitude"] == undefined) {
     return;
   }
-  // console.log(typeof coords ,'lol', [parseFloat(coords['latitude'].toFixed(4)), parseFloat(coords['longitude'].toFixed(4))]);
-  // const postionss: any =  [parseInt(coords['latitude']), parseInt(coords['longitude'])]
+
   map.flyTo([coords["latitude"], coords["longitude"]], 17);
 
   return (
@@ -141,8 +143,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc,setShowEnquireyModal }) => {
         eventHandlers={{
           click: (e) => {
             map.flyTo(e.latlng, 17);
-            console.log("target", e.latlng);
-            setFunc({ latitude: e.latlng.lat, longitude: e.latlng.lng });
+            setFunc({ latitude: e.latittude, longitude: e.longitude });
 
             // setFunc((prevCoord) => prevCoord.filter((prevCoord) => prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(e.latlng))
             //   // or (coord) => coord.lat !== pos.lat && coord.lng !== pos.lng
@@ -153,15 +154,21 @@ const Markerwhatever: FC<any> = ({ coords, setFunc,setShowEnquireyModal }) => {
       >
         <Popup>
           <div className="text-center font-bold mb-2">Details</div>
-          Plot Number: {coords["Plot Number"]}
+          Plot Number: {coords["PlotNumber"]}
           <br />
           Block: {coords["Block"]}
           <br />
+          Plot Location: {coords["PlotLocation"]}
+          <br />
+          Plot Type: {coords["PlotType"]}
+          <br />
           Status: {coords["Status"]}
           <br />
-          Area in Marl: {coords["Area in Marl"]}
+          Transfer Status: {coords["TransferStatus"]}
           <br />
-          Demand: {coords["Demand"]} lacs
+          Area in Marl: {coords["AreaInMarla"]} marla
+          <br />
+          Demand: {coords["DemandInLacs"]} lacs
           {/* A pretty CSS3 popup. <br /> Easily customizable. */}
           <div className="w-full py-2 flex justify-center gap-2 flex-col">
             <a
@@ -206,27 +213,51 @@ const Map = () => {
     // [31.466812595250545, 74.18388783931734],
     // [31.46274027517365, 74.18595850467683],
     // [31.459541778257144, 74.1868168115616],
-  ])   
-  const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false)
+  ]);
+  const [showSaleModal, setShowSaleModal] = useState<Boolean>(false);
+  const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
+  const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
   const draggableMarker = true;
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
       .then((res: AxiosResponse<Response>) => {
         // @ts-ignore
-
         // @ts-ignore
         setArratLATLONG([...res.data]);
       });
   }, []);
-
   // const arratLATLONG: Coordinates  = [[31.462254,74.196334], [31.463052, 74.194269], [31.467729, 74.184702], [31.47226, 74.189333]]
   // const bounds = new LatLngBounds([31.48734, 74.170899], [31.437555, 74.209462])
+  console.log(searchedPlot, "searchedPlot");
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
-        <SearchBar data={arratLATLONG} setSearchedPlot={setSearchedPlot} />
-        {searchedPlot.length > 0 && (
+        <div className="flex w-full gap-3">
+          <button
+            className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+            onClick={() => {
+              setShowFilterModal(true);
+            }}
+          >
+            {/* <p className="text-white">Filters</p> */}
+            <TbFilterSearch color="white" />
+          </button>
+
+          <button
+            className="bg-yellow-600 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+            onClick={() => {
+              setShowSaleModal(true);
+            }}
+          >
+            Sale Your Plot
+            {/* <p className="text-white">Filters</p> */}
+            <MdOutlineSell color="white" />
+          </button>
+        </div>
+
+        {/* <SearchBar data={arratLATLONG} setSearchedPlot={setSearchedPlot} /> */}
+        {/* {searchedPlot.length > 0 && (
           <div className="bg-white mt-4 rounded-lg p-4 ">
             <div className="text-center font-bold mb-2">Details</div>
             Plot Number:{" "}
@@ -241,28 +272,28 @@ const Map = () => {
             <br />
             Demand: {searchedPlot.length > 0 && searchedPlot[0]["Demand"]} lacs
             <div className="w-full py-2 flex justify-center gap-2 flex-col">
-            <a
-              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
-              href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
-              target="_blank" // Opens in a new tab
-              rel="noopener noreferrer"
-            >
-              <p className="text-white">Contact Us</p>
-              <FaPhone color="white" />
-            </a>
+              <a
+                className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
+                href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
+                target="_blank" // Opens in a new tab
+                rel="noopener noreferrer"
+              >
+                <p className="text-white">Contact Us</p>
+                <FaPhone color="white" />
+              </a>
 
-            <button
-              className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
-              onClick={() => {
-                setShowEnquireyModal(true) // Replace 'youremail@example.com' with the actual email address
-              }}
-            >
-              <p className="text-white">Send Enquiry</p>
-              <MdMarkEmailRead color="white" />
-            </button>
+              <button
+                className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+                onClick={() => {
+                  setShowEnquireyModal(true); // Replace 'youremail@example.com' with the actual email address
+                }}
+              >
+                <p className="text-white">Send Enquiry</p>
+                <MdMarkEmailRead color="white" />
+              </button>
+            </div>
           </div>
-          </div>
-        )}
+        )} */}
       </div>
 
       {isLoading && (
@@ -281,14 +312,21 @@ const Map = () => {
           <h1 className="text-2xl text-primary">Loading ...</h1>
         </div>
       )}
-      {showEnquireyModal&&<EnquireyModal closeModal={setShowEnquireyModal}/>}
+      {showEnquireyModal && <EnquireyModal closeModal={setShowEnquireyModal} />}
+      {showSaleModal && <SaleYourPlotModal closeModal={setShowSaleModal} />}
+      {showFilterModal && (
+        <FilterModal
+          data={arratLATLONG}
+          setSearchedPlot={setSearchedPlot}
+          closeModal={setShowFilterModal}
+        />
+      )}
 
       {/* @ts-ignore */}
       {isModal && (
         <Modal
           closeModal={() => setIsModal(false)}
           toggle={(plot, blockName) => {
-            console.log("check_", latitude, longitude, plot, blockName);
             if (latitude && longitude && plot && blockName) {
               // setIsLoading(true);
               axios
