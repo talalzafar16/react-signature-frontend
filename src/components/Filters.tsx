@@ -153,7 +153,6 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
         <p className="text-gray-600 text-sm mb-1">Select Block</p>
         <Select
           showSearch
-          value={selectedBlock}
           className="w-64 "
           allowClear
           placeholder="Select Block"
