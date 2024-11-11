@@ -153,7 +153,9 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
         <p className="text-gray-600 text-sm mb-1">Select Block</p>
         <Select
           showSearch
+          value={selectedBlock}
           className="w-64 "
+          allowClear
           placeholder="Select Block"
           optionFilterProp="label"
           onChange={onChangeBlock}
@@ -166,6 +168,7 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
 
           <Select
             showSearch
+            allowClear
             className="w-64"
             placeholder="Select Plot Number"
             optionFilterProp="label"
@@ -180,6 +183,7 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
 
         <Select
           showSearch
+          allowClear
           className="w-64 "
           placeholder="Select Plot Type"
           optionFilterProp="label"
@@ -192,6 +196,7 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
 
         <Select
           showSearch
+          allowClear
           className="w-64 "
           placeholder="Select Payment Status"
           optionFilterProp="label"
@@ -203,6 +208,7 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
         <p className="text-gray-600 text-sm mb-1">Plot Location</p>
         <Select
           showSearch
+          allowClear
           className="w-64"
           placeholder="Select Plot Location"
           optionFilterProp="label"
@@ -214,6 +220,7 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
         <p className="text-gray-600 text-sm mb-1">Transfer Fees</p>
         <Select
           showSearch
+          allowClear
           className="w-64"
           placeholder="Select Plot Location"
           optionFilterProp="label"
