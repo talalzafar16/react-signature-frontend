@@ -6,6 +6,7 @@ import ExcelListing from "../pages/ExcelListing";
 import DisplayExcelData from "@/pages/DisplayExcelData";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "@/pages/NotFound";
+import LatLongFinderMap from "@/pages/LatlOngFinderMap";
 
 const Router = () => {
   return (
@@ -13,6 +14,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Login />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/LatLongFinderMap" element={<LatLongFinderMap />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/home/*" element={<Home />} />
