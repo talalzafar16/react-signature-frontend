@@ -154,7 +154,7 @@ const Markerwhatever: FC<any> = ({ coords, setFunc, setShowEnquireyModal }) => {
       >
         <Popup>
           <div className="text-center font-bold mb-2">Details</div>
-          Plot Number: {coords["PlotNumber"]}
+          Plot Number: {coords["PlotNumbers"]}
           <br />
           Block: {coords["Block"]}
           <br />

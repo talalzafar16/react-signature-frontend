@@ -80,17 +80,17 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
     let check = [];
     data.map((property) => {
       if (property.Block?.toLowerCase() === selectedBlock?.toLowerCase()) {
-        if (!check.includes(property["PlotNumber"])) {
+        if (!check.includes(property["PlotNumbers"])) {
           distinctPlotArray.push(property);
-          check.push(property["PlotNumber"]);
+          check.push(property["PlotNumbers"]);
         }
       }
     });
 
     const plotOptions = distinctPlotArray.map((plotDetail, index) => ({
-      id: `${plotDetail["PlotNumber"]?.toLowerCase()}-${index}`,
-      value: plotDetail["PlotNumber"]?.toLowerCase(),
-      label: plotDetail["PlotNumber"],
+      id: `${plotDetail["PlotNumbers"]?.toLowerCase()}-${index}`,
+      value: plotDetail["PlotNumbers"]?.toLowerCase(),
+      label: plotDetail["PlotNumbers"],
     }));
 
     setPlotNumberData(plotOptions);
@@ -122,7 +122,7 @@ const Filters = ({ data, setSearchedPlot, closeModal }: any) => {
         (!selectedBlock ||
           e.Block?.toLowerCase() === selectedBlock?.toLowerCase()) &&
         (!selectedPlot ||
-          e["PlotNumber"]?.toLowerCase() === selectedPlot.toLowerCase()) &&
+          e["PlotNumbers"]?.toLowerCase() === selectedPlot.toLowerCase()) &&
         (!selectedPlotType ||
           e["PlotType"]?.toLowerCase() === selectedPlotType.toLowerCase()) &&
         (!selectedStatus ||
