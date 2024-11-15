@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+// import Header from "@/components/Header";
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 // import { Input } from "@/components/ui/input";
@@ -29,7 +29,7 @@ import { API_ENDPOINT } from "@/config/apiEndpoint";
 // };
 
 const AddProperty = () => {
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<any>();
   // const [listingDetails, setListingDetails] = useState(initialListingDetails);
@@ -43,56 +43,59 @@ const AddProperty = () => {
     try {
       const formData = new FormData();
       formData.append("file", file[0]);
-  
-      const res = await axios.post(`${API_ENDPOINT}/plots/upload-excel`, formData);
-  
+
+      const res = await axios.post(
+        `${API_ENDPOINT}/plots/upload-excel`,
+        formData
+      );
+
       // Handle success response if needed
-      alert( res.data.message);
-  
+      alert(res.data.message);
     } catch (error) {
       console.error("Error submitting form:", error);
       // Optional: Show error to the user
-      alert("An error occurred while submitting the form. Please try again. with correct format");
+      alert(
+        "An error occurred while submitting the form. Please try again. with correct format"
+      );
     } finally {
       setLoading(false);
     }
   };
-  
-  
+
   return (
     <div className="p-5 bg-slate-100 min-h-screen">
       {/* <!-- Header --> */}
-      <Header
+      {/* <Header
         search={search}
         setSearch={setSearch}
         heading="Add New Property"
-      />
-      
+      /> */}
+
       <Card className="mt-10">
-        <CardHeader className="font-semibold text-lg">
-        Upload Excel
-        </CardHeader>
+        <CardHeader className="font-semibold text-lg">Upload Excel</CardHeader>
         <CardContent className="">
-          <div  className="w-full flex items-center gap-4 flex-col justify-center">
+          <div className="w-full flex items-center gap-4 flex-col justify-center">
             <input
               type="file"
               id="excel-file"
               name="excel-file"
               className="ml-6"
-              onChange={(e)=>setFile(e.target.files)}
+              onChange={(e) => setFile(e.target.files)}
             />
-             <button onClick={onSubmit} className="bg-primary w-32 text-white px-6 py-2 rounded-xl">
-            Upload
-          </button>
+            <button
+              onClick={onSubmit}
+              className="bg-primary w-32 text-white px-6 py-2 rounded-xl"
+            >
+              Upload
+            </button>
           </div>
-         
         </CardContent>
       </Card>
-      {loading&&<div className="absolute top-0 w-screen h-screen backdrop-blur-sm flex justify-center items-center overflow-hidden">
-        <div className="text-black text-2xl ">
-Uploading...
-</div>
-        </div>}
+      {loading && (
+        <div className="absolute top-0 w-screen h-screen backdrop-blur-sm flex justify-center items-center overflow-hidden">
+          <div className="text-black text-2xl ">Uploading...</div>
+        </div>
+      )}
     </div>
   );
 };

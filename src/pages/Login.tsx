@@ -44,7 +44,7 @@ const Login: React.FC = () => {
       const result = await response.json();
       console.log("Login successful:", result);
       localStorage.setItem("user", JSON.stringify(result.data.userData));
-      navigate("/home");
+      navigate("/home/addProperty");
     } catch (err) {
       setError("Invalid email or password");
       console.error("Login error:", err);
@@ -56,7 +56,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex bg-white">
       {/* Left Column */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between h-screen p-10 from-white to-gray-100 bg-loginBg">
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-center h-screen p-10 from-white to-gray-100 bg-loginBg">
         <div>
           <h1 className="text-4xl font-bold text-primary mb-8 text-center">
             Welcome!
@@ -88,7 +88,7 @@ const Login: React.FC = () => {
       {/* Right Column */}
       <div className="w-full lg:w-1/2 h-screen flex items-center justify-center p-8 bg-secondary">
         <div className="w-full max-w-md">
-          <h2 className="text-3xl font-bold mb-8">Login</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Login</h2>
           <form className="space-y-6" onSubmit={handleLogin}>
             <div className="space-y-2">
               <Input
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Switch id="terms" />
                 <Label htmlFor="terms">Accept terms</Label>
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
               >
                 Forgot password!
               </a>
-            </div>
+            </div> */}
             {error && <p className="text-sm text-left text-red-500">{error}</p>}
             <Button
               type="submit"
@@ -147,9 +147,9 @@ const Login: React.FC = () => {
             >
               Login
             </Button>
-            <Button className="w-full text-primary bg-transparent hover:bg-transparent py-5 border border-black">
+            {/* <Button className="w-full text-primary bg-transparent hover:bg-transparent py-5 border border-black">
               Register
-            </Button>
+            </Button> */}
           </form>
         </div>
       </div>
