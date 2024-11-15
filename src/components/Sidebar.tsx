@@ -1,9 +1,9 @@
-import { HiMiniSquares2X2 } from "react-icons/hi2";
-import { FaBuilding } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
+// import { HiMiniSquares2X2 } from "react-icons/hi2";
+// import { FaBuilding } from "react-icons/fa";
+// import { IoMdSettings } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { BsBuildingFillAdd } from "react-icons/bs";
-import { IoIosPeople } from "react-icons/io";
+// import { IoIosPeople } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const iconSize = 20;
