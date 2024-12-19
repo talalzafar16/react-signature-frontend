@@ -15,6 +15,7 @@ import "leaflet/dist/leaflet.css";
 import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
+import { SvgString } from "@/components/svg";
 
 const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
@@ -42,7 +43,7 @@ const svgString = `<svg width="25px" height="25px" viewBox="-4 0 36 36" version=
 </svg>`;
 
 const svgIcon = L.divIcon({
-  html: svgString,
+  html: SvgString,
   className: "custom-svg-icon",
   iconSize: [24, 24],
   iconAnchor: [12, 24],
