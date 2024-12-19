@@ -65,7 +65,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/");
+    navigate("/admin/auth/login");
   };
 
   return (
