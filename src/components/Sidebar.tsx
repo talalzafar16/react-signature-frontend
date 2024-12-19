@@ -31,7 +31,7 @@ const data = [
     selectedIcon: (
       <BsBuildingFillAdd size={iconSize} color={selectedIconColor} />
     ),
-    link: "/home/addProperty",
+    link: "/admin/home/addProperty",
   },
   {
     name: "Find Lat Long",
@@ -39,7 +39,7 @@ const data = [
     selectedIcon: (
       <BsBuildingFillAdd size={iconSize} color={selectedIconColor} />
     ),
-    link: "/home/latlongSearcher",
+    link: "/admin/home/latlongSearcher",
   },
   // {
   //   name: "Sellers Listing",

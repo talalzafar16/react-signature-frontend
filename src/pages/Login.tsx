@@ -44,7 +44,7 @@ const Login: React.FC = () => {
       const result = await response.json();
       console.log("Login successful:", result);
       localStorage.setItem("user", JSON.stringify(result.data.userData));
-      navigate("/home/addProperty");
+      navigate("/admin/home/addProperty");
     } catch (err) {
       setError("Invalid email or password");
       console.error("Login error:", err);
