@@ -33,6 +33,14 @@ const data = [
     ),
     link: "/home/addProperty",
   },
+  {
+    name: "Find Lat Long",
+    icon: <BsBuildingFillAdd size={iconSize} color={iconColor} />,
+    selectedIcon: (
+      <BsBuildingFillAdd size={iconSize} color={selectedIconColor} />
+    ),
+    link: "/home/latlongSearcher",
+  },
   // {
   //   name: "Sellers Listing",
   //   icon: <IoIosPeople size={iconSize} color={iconColor} />,

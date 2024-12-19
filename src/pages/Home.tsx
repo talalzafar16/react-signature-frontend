@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import AddProperty from "./AddProperty";
 // import Settings from "./Settings";
 import Sidebar from "@/components/Sidebar";
+import LatlongSearcher from "./LatlongSearcher";
 // import DisplaySellers from "./DisplaySellers";
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
           {/* <Route path="/" element={<Dashboard />} />
           <Route path="listings" element={<DisplayProperties />} /> */}
           <Route path="addProperty" element={<AddProperty />} />
+          <Route path="latlongSearcher" element={<LatlongSearcher />} />
           {/* <Route path="settings" element={<Settings />} />
           <Route path="sellers" element={<DisplaySellers />} /> */}
         </Routes>

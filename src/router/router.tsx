@@ -7,6 +7,7 @@ import Map from "../pages/Map";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "@/pages/NotFound";
 import LatLongFinderMap from "@/pages/LatLongFinderMap";
+import AnotherMap from "@/pages/AnotherMap";
 
 const Router = () => {
   return (
@@ -15,6 +16,7 @@ const Router = () => {
         <Route path="/" element={<Login />} />
         <Route path="/map" element={<Map />} />
         <Route path="/LatLongFinderMap" element={<LatLongFinderMap />} />
+        <Route path="/AnotherMap" element={<AnotherMap />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/home/*" element={<Home />} />
