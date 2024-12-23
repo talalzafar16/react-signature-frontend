@@ -1,126 +1,87 @@
-import { FC, useState, useLayoutEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Popup,
-  Marker,
-  ImageOverlay,
-} from "react-leaflet";
-import { useMap } from "react-leaflet/hooks";
-import L from "leaflet";
-import Modal from "@/components/Modal";
+import { useRef } from "react";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
 import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
-import { FaPhone } from "react-icons/fa6";
-import { MdMarkEmailRead, MdOutlineSell } from "react-icons/md";
+import { MdOutlineSell } from "react-icons/md";
 import EnquireyModal from "@/components/EnquireyModal";
 import FilterModal from "@/components/FilterModal";
 import SaleYourPlotModal from "@/components/SaleYourPlotModal";
-import { SvgString } from "@/components/svg";
-
-const svgIcon = L.divIcon({
-  html: SvgString,
-  className: "custom-svg-icon",
-  iconSize: [24, 24],
-  iconAnchor: [12, 24],
-  popupAnchor: [0, -36],
-});
-
+import { CiMail } from "react-icons/ci";
 type Models = {
   plotNumber: string;
   latitude: number;
   longitude: number;
 };
 
-type newModels = Models | undefined | [];
-
 interface Response {
   data: Models[];
   message: string;
 }
 
-const Markerwhatever: FC<any> = ({ coords, setFunc, setShowEnquireyModal }) => {
-  const map = useMap();
-
-  if (coords["latitude"] == undefined || coords["longitude"] == undefined) {
-    return;
-  }
-
-  map.flyTo([coords["latitude"], coords["longitude"]], 18);
-
-  return (
-    <div>
-      <Marker
-        // @ts-ignore
-        icon={svgIcon}
-        position={[coords["latitude"], coords["longitude"]]}
-        eventHandlers={{
-          click: (e) => {
-            map.flyTo(e.latlng, 17);
-            setFunc({ latitude: e.latittude, longitude: e.longitude });
-          },
-        }}
-      >
-        <Popup>
-          <div className="text-center font-bold mb-2">Details</div>
-          Plot Number: {coords["PlotNumbers"]}
-          <br />
-          Block: {coords["Block"]}
-          <br />
-          Plot Location: {coords["PlotLocation"]}
-          <br />
-          Plot Type: {coords["PlotType"]}
-          <br />
-          Status: {coords["Status"]}
-          <br />
-          Transfer Status: {coords["TransferStatus"]}
-          <br />
-          Area in Marl: {coords["AreaInMarla"]} marla
-          <br />
-          Demand: {coords["DemandInLacs"]} lacs
-          <div className="w-full py-2 flex justify-center gap-2 flex-col">
-            <a
-              className="bg-blue-400 flex h-8 justify-center items-center p-2 gap-2 text-white rounded-lg"
-              href="https://wa.me/03111786929" // Replace 'yourphonenumber' with the actual phone number (in international format)
-              target="_blank" // Opens in a new tab
-              rel="noopener noreferrer"
-            >
-              <p className="text-white">Contact Us</p>
-              <FaPhone color="white" />
-            </a>
-
-            <button
-              className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
-              onClick={() => {
-                setShowEnquireyModal(true); // Replace 'youremail@example.com' with the actual email address
-              }}
-            >
-              <p className="text-white">Send Enquiry</p>
-              <MdMarkEmailRead color="white" />
-            </button>
-          </div>
-        </Popup>
-      </Marker>
-    </div>
-  );
-};
-
 const Map = () => {
-  // const = [51.505, -0.09]
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isModal, setIsModal] = useState<boolean>(false);
-  const [latitude, setLatitude] = useState<number>(0);
-  const [longitude, setLongitude] = useState<number>(0);
   const [searchedPlot, setSearchedPlot] = useState<Models[] | []>([]);
   const [arratLATLONG, setArratLATLONG] = useState<Models[] | []>([]);
+  const INITIAL_CENTER = [74.1936, 31.456];
+  const INITIAL_ZOOM = 16.5;
   const [showSaleModal, setShowSaleModal] = useState<Boolean>(false);
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
-  const draggableMarker = true;
+  const mapRef = useRef();
+  const markersRef = useRef([]);
+  const mapContainerRef = useRef();
+
+  const Popup = (coords: any) => {
+    return `
+      <div style="padding-left:14px">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 8px;">Details</div>
+        Plot Number: ${coords["PlotNumbers"]}
+        <br />
+        Block: ${coords["Block"]}
+        <br />
+        Plot Location: ${coords["PlotLocation"]}
+        <br />
+        Plot Type: ${coords["PlotType"]}
+        <br />
+        Status: ${coords["Status"]}
+        <br />
+        Transfer Status: ${coords["TransferStatus"]}
+        <br />
+        Area in Marl: ${coords["AreaInMarla"]} marla
+        <br />
+        Demand: ${coords["DemandInLacs"]} lacs
+        <div style="width: 100%; padding: 8px; display: flex; justify-content: center; gap: 8px; flex-direction: column;">
+          <a
+            style="background-color: #60A5FA; display: flex; height: 32px; justify-content: center; align-items: center; padding: 8px; gap: 8px; color: white; border-radius: 8px; text-decoration: none;"
+            href="https://wa.me/03111786929"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <p style="color: white;">Contact Us</p>
+            <FaPhone color="white" />
+          </a>
+        </div>
+      </div>
+    `;
+  };
+  const handleFlyToMarker = (longitude, latitude) => {
+    // Fly to the marker location
+    if (mapRef.current) {
+      // @ts-ignore
+      mapRef.current.flyTo({
+        center: [longitude, latitude],
+        zoom: 18, // You can adjust the zoom level as needed
+        speed: 0.5, // The speed of the flyTo (0.0 - 1.0)
+        curve: 0.8, // The curve of the fly (1 = straight line, < 1 = curved)
+      });
+    }
+  };
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
@@ -128,7 +89,124 @@ const Map = () => {
         // @ts-ignore
         setArratLATLONG([...res.data]);
       });
+    mapboxgl.accessToken =
+      "pk.eyJ1Ijoic2lnbmF0dXJlbGFuZHMiLCJhIjoiY200d2J6Y29jMGQwczJxc2Y3MzBmeDhpZCJ9.CLBIlBACiro2UT8Cabo1OQ";
+    // @ts-ignore
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      // @ts-ignore
+      center: INITIAL_CENTER,
+      zoom: INITIAL_ZOOM,
+      minZoom: 14,
+    });
+
+    // @ts-ignore
+    mapRef.current.on("load", () => {
+      const bounds = [
+        [74.168, 31.474], // Southwest corner
+        [74.213, 31.4483], // Northeast corner
+      ];
+
+      // Calculate the center of the image
+      const center = [
+        (bounds[0][0] + bounds[1][0]) / 2, // Longitude (x)
+        (bounds[0][1] + bounds[1][1]) / 2, // Latitude (y)
+      ];
+
+      // Rotation angle in degrees
+      const rotationAngle = -17; // Rotate by 45 degrees
+      const radians = (rotationAngle * Math.PI) / 180;
+
+      // Function to rotate a point around the center
+      const rotatePoint = (
+        point: number[],
+        center: number[],
+        angle: number
+      ): number[] => {
+        const [cx, cy] = center; // Center coordinates
+        const [x, y] = point; // Point to rotate
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        return [
+          cos * (x - cx) - sin * (y - cy) + cx, // New x
+          sin * (x - cx) + cos * (y - cy) + cy, // New y
+        ];
+      };
+
+      // Calculate the rotated coordinates
+      const coordinates = [
+        rotatePoint([bounds[0][0], bounds[0][1]], center, radians), // Bottom-left
+        rotatePoint([bounds[1][0], bounds[0][1]], center, radians), // Bottom-right
+        rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
+        rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
+      ];
+      // @ts-ignore
+      mapRef.current.addSource("overlay-image", {
+        type: "image",
+        url: MapUrl,
+        coordinates: coordinates,
+      });
+
+      // @ts-ignore
+      mapRef.current.addLayer({
+        id: "overlay-layer",
+        type: "raster",
+        source: "overlay-image",
+      });
+      setTimeout(() => {
+        setIsLoading(false); // Hide the loading indicator
+      }, 2000);
+    });
+
+    return () => {
+      // @ts-ignore
+      mapRef?.current?.remove();
+    };
   }, []);
+
+  useLayoutEffect(() => {
+    if (markersRef.current.length > 0) {
+      markersRef.current.forEach((marker) => {
+        marker.remove();
+      });
+      markersRef.current = []; // Reset markers
+    }
+    if (arratLATLONG.length > 0 && searchedPlot.length == 0) {
+      arratLATLONG.forEach((plot) => {
+        const marker = new mapboxgl.Marker()
+          // @ts-ignore
+          .setLngLat([plot.longitude, plot.latitude])
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
+          .addTo(mapRef.current);
+        markersRef.current.push(marker);
+        // @ts-ignore
+        marker.getElement().addEventListener("click", () => {
+          // @ts-ignore
+
+          handleFlyToMarker(plot.longitude, plot.latitude);
+        });
+      });
+    }
+
+    if (searchedPlot.length > 0) {
+      searchedPlot.forEach((plot) => {
+        const marker = new mapboxgl.Marker()
+          // @ts-ignore
+          .setLngLat([plot.longitude, plot.latitude])
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
+          .addTo(mapRef.current);
+        markersRef.current.push(marker);
+        // @ts-ignore
+        marker.getElement().addEventListener("click", () => {
+          // @ts-ignore
+        });
+      });
+      handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
+    }
+  }, [arratLATLONG, searchedPlot]);
+
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
@@ -151,11 +229,20 @@ const Map = () => {
             Sale Your Plot
             <MdOutlineSell color="white" />
           </button>
+          <button
+            className="bg-yellow-600 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+            onClick={() => {
+              setShowEnquireyModal(true);
+            }}
+          >
+            Make an Enquiry
+            <CiMail color="white" />
+          </button>
         </div>
       </div>
-
       {isLoading && (
         <div
+          className="backdrop-blur-md"
           style={{
             position: "absolute",
             height: "100%",
@@ -167,7 +254,7 @@ const Map = () => {
             zIndex: 3294832847234,
           }}
         >
-          <h1 className="text-2xl text-primary">Loading ...</h1>
+          <h1 className="text-2xl text-primary">Fetching Plots ...</h1>
         </div>
       )}
       {showEnquireyModal && <EnquireyModal closeModal={setShowEnquireyModal} />}
@@ -180,100 +267,11 @@ const Map = () => {
         />
       )}
 
-      {/* @ts-ignore */}
-      {isModal && (
-        <Modal
-          closeModal={() => setIsModal(false)}
-          toggle={(plot, blockName) => {
-            if (latitude && longitude && plot && blockName) {
-              // setIsLoading(true);
-              axios
-                .post(`${API_ENDPOINT}/plots/add-plot`, {
-                  plotNumber: plot,
-                  latitude: latitude,
-                  longitude: longitude,
-                  blockName: blockName,
-                })
-                .then((res1) => {
-                  console.log(res1);
-                  setIsModal(false);
-                });
-            } else {
-              alert("data");
-            }
-          }}
-        />
-      )}
-
-      <MapContainer
-        // @ts-ignore
-        center={[31.46081, 74.18806]}
-        dragging={draggableMarker}
-        whenReady={() => {
-          setTimeout(() => setIsLoading(false), 3000);
-        }}
-        zoom={17}
-        scrollWheelZoom={false}
-      >
-        <TileLayer
-          // @ts-ignore
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <ImageOverlay
-          url={MapUrl}
-          bounds={[
-            [31.48734, 74.170899],
-            [31.437555, 74.209462],
-          ]}
-          // @ts-ignore
-          zIndex={10}
-        />
-
-        {arratLATLONG.length > 0 &&
-          searchedPlot.length == 0 &&
-          arratLATLONG.map((item: any) => {
-            if (item) {
-              return (
-                <Markerwhatever
-                  coords={item}
-                  addCoordinates={(value) => {
-                    setLatitude(value.latitude);
-                    setLongitude(value.longitude);
-                    setIsModal(true);
-                  }}
-                  setShowEnquireyModal={setShowEnquireyModal}
-                  setFunc={(value) => {
-                    setArratLATLONG((state: newModels[]) => {
-                      return [...state, value];
-                    });
-                  }}
-                />
-              );
-            }
-          })}
-        {searchedPlot.length > 0 &&
-          searchedPlot.map((item: any) => {
-            if (item) {
-              return (
-                <Markerwhatever
-                  coords={item}
-                  addCoordinates={(value) => {
-                    setLatitude(value.latitude);
-                    setLongitude(value.longitude);
-                    setIsModal(true);
-                  }}
-                  setShowEnquireyModal={setShowEnquireyModal}
-                  setFunc={(value) => {
-                    setArratLATLONG((state: newModels[]) => {
-                      return [...state, value];
-                    });
-                  }}
-                />
-              );
-            }
-          })}
-      </MapContainer>
+      <div
+        className="h-screen w-screen"
+        id="map-container"
+        ref={mapContainerRef}
+      />
     </div>
   );
 };

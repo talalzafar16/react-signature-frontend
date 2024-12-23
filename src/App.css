@@ -1,7 +1,7 @@
-body{
-    position: relative;
+body {
+  position: relative;
 }
-.leaflet-container{
-    height: 100vh;
-    width: 100%s;
+.leaflet-container {
+  height: 100vh;
+  width: 100%s;
 }
