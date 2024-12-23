@@ -58,7 +58,7 @@ const AnotherMap = () => {
       // @ts-ignore
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
-      minZoom: 12,
+      minZoom: 13,
     });
 
     // @ts-ignore
@@ -115,7 +115,9 @@ const AnotherMap = () => {
         type: "raster",
         source: "overlay-image",
       });
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     });
 
     // @ts-ignore
