@@ -94,7 +94,7 @@ const Map = () => {
     // @ts-ignore
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v11",
+      // style: "mapbox://styles/mapbox/streets-v11",
       // @ts-ignore
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
@@ -154,6 +154,7 @@ const Map = () => {
         id: "overlay-layer",
         type: "raster",
         source: "overlay-image",
+       
       });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
@@ -210,9 +211,9 @@ const Map = () => {
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
-        <div className="flex w-full gap-3">
+        <div className="flex w-full ml-3 gap-3">
           <button
-            className="bg-green-700 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+            className="bg-green-700 md:h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
             onClick={() => {
               setShowFilterModal(true);
             }}
@@ -221,7 +222,7 @@ const Map = () => {
           </button>
 
           <button
-            className="bg-yellow-600 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+            className="bg-yellow-600 md:h-8  flex justify-center items-center gap-2 p-2 rounded-lg text-white"
             onClick={() => {
               setShowSaleModal(true);
             }}
@@ -230,7 +231,7 @@ const Map = () => {
             <MdOutlineSell color="white" />
           </button>
           <button
-            className="bg-yellow-600 h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
+            className="bg-yellow-600 md:h-8 flex justify-center items-center gap-2 p-2 rounded-lg text-white"
             onClick={() => {
               setShowEnquireyModal(true);
             }}
