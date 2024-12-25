@@ -145,7 +145,7 @@ const Map = () => {
       // @ts-ignore
       mapRef.current.addSource("overlay-image", {
         type: "image",
-        url: MapUrl,
+        url: "https://api.digitalmaps.pk/api/v1/public/overlay10.png",
         coordinates: coordinates,
       });
 
