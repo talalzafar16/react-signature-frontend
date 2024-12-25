@@ -144,7 +144,7 @@ const Map = () => {
       ];
       // @ts-ignore
       mapRef.current.addSource("overlay-image", {
-        type: "image",
+        type: "raster",
         url: MapUrl,
         coordinates: coordinates,
       });
