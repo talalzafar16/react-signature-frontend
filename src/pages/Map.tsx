@@ -160,10 +160,10 @@ const Map = () => {
         //   tileSize: 256, // Tile size in pixels (usually 256 or 512)
         // },
         source: "overlay-image",
-        tileSize: 256, 
-        paint: {
-          "raster-opacity": 1.0, // Ensure full opacity
-        },
+        // tileSize: 256, 
+        // paint: {
+        //   "raster-opacity": 1.0, // Ensure full opacity
+        // },
       });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
