@@ -153,8 +153,17 @@ const Map = () => {
       mapRef.current.addLayer({
         id: "overlay-layer",
         type: "raster",
+        // source: {
+        //   type: "raster",
+        //   tiles: MapUrl ,
+        //   // bounds: coordinates, // [westLng, southLat, eastLng, northLat]
+        //   tileSize: 256, // Tile size in pixels (usually 256 or 512)
+        // },
         source: "overlay-image",
-       
+        tileSize: 256, 
+        paint: {
+          "raster-opacity": 1.0, // Ensure full opacity
+        },
       });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
@@ -162,7 +171,7 @@ const Map = () => {
     });
 
     return () => {
-      // @ts-ignore
+      // @ts-ignorev
       mapRef?.current?.remove();
     };
   }, []);
