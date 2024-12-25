@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
-import MapUrl from "../assets/map/overlay10.png";
+// import MapUrl from "../assets/map/overlay10.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
@@ -82,6 +82,23 @@ const Map = () => {
       });
     }
   };
+  function splitImage(image, tileWidth, tileHeight) {
+    const tiles = [];
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = tileWidth;
+    canvas.height = tileHeight;
+
+    for (let y = 0; y < image.height; y += tileHeight) {
+        for (let x = 0; x < image.width; x += tileWidth) {
+            ctx.clearRect(0, 0, tileWidth, tileHeight);
+            ctx.drawImage(image, -x, -y);
+            tiles.push(canvas.toDataURL());
+        }
+    }
+    return tiles;
+}
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
@@ -98,7 +115,7 @@ const Map = () => {
       // @ts-ignore
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
-      minZoom: 14,
+      minZoom: 10,
     });
 
     // @ts-ignore
@@ -144,8 +161,8 @@ const Map = () => {
       ];
       // @ts-ignore
       mapRef.current.addSource("overlay-image", {
-        type: "raster",
-        url: MapUrl,
+        type: "image",
+        url: "https://api.digitalmaps.pk/api/v1/public/overlay10.jpg",
         coordinates: coordinates,
       });
 
@@ -160,10 +177,10 @@ const Map = () => {
         //   tileSize: 256, // Tile size in pixels (usually 256 or 512)
         // },
         source: "overlay-image",
-        // tileSize: 256, 
-        // paint: {
-        //   "raster-opacity": 1.0, // Ensure full opacity
-        // },
+        tileSize: 256, 
+        paint: {
+          "raster-opacity": 1.0, // Ensure full opacity
+        },
       });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
