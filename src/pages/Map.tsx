@@ -147,6 +147,13 @@ const Map = () => {
         rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
         rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
       ];
+      const adjustedCoordinates = [
+        [74.16274011939652, 31.480016879470384], // Top-right corner (shifted left)
+        [74.20577383341484, 31.466860152757864], // Bottom-right corner (shifted left)
+        [74.19825988060348, 31.442283120529616], // Bottom-left corner (shifted left)
+        [74.15522616658516, 31.455439847242136], // Top-left corner (shifted left)
+      ];
+      console.log(coordinates);
       // @ts-ignore
       mapRef.current.addSource("overlay-image", {
         type: "image",
@@ -159,6 +166,19 @@ const Map = () => {
         id: "overlay-layer",
         type: "raster",
         source: "overlay-image",
+      });
+      // @ts-ignore
+      mapRef.current.addSource("overlay-image2", {
+        type: "image",
+        url: MapUrl,
+        coordinates: adjustedCoordinates,
+      });
+
+      // @ts-ignore
+      mapRef.current.addLayer({
+        id: "overlay-layer1",
+        type: "raster",
+        source: "overlay-image2",
       });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
