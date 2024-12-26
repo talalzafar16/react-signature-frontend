@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
-// import MapUrl from "../assets/map/overlay10.png";
+import MapUrl from "../assets/map/overlay.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
@@ -29,7 +29,7 @@ const Map = () => {
   const [searchedPlot, setSearchedPlot] = useState<Models[] | []>([]);
   const [arratLATLONG, setArratLATLONG] = useState<Models[] | []>([]);
   const INITIAL_CENTER = [74.1936, 31.456];
-  const INITIAL_ZOOM = 16.5;
+  const INITIAL_ZOOM = 15;
   const [showSaleModal, setShowSaleModal] = useState<Boolean>(false);
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
@@ -82,7 +82,6 @@ const Map = () => {
       });
     }
   };
-  
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
@@ -99,9 +98,14 @@ const Map = () => {
       // @ts-ignore
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
-      minZoom: 10,
+      minZoom: 13,
+      pitch: 0, // disable pitch
+      bearing: 0, // disable rotation
     });
-
+    // @ts-ignore
+    mapRef.current.dragRotate.disable();
+    // @ts-ignore
+    mapRef.current.touchZoomRotate.disableRotation();
     // @ts-ignore
     mapRef.current.on("load", () => {
       const bounds = [
@@ -143,10 +147,17 @@ const Map = () => {
         rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
         rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
       ];
+      const adjustedCoordinates = [
+        [74.16274011939652, 31.480016879470384], // Top-right corner (shifted left)
+        [74.20577383341484, 31.466860152757864], // Bottom-right corner (shifted left)
+        [74.19825988060348, 31.442283120529616], // Bottom-left corner (shifted left)
+        [74.15522616658516, 31.455439847242136], // Top-left corner (shifted left)
+      ];
+      console.log(coordinates);
       // @ts-ignore
       mapRef.current.addSource("overlay-image", {
         type: "image",
-        url: "https://api.digitalmaps.pk/api/v1/public/overlay10.jpg",
+        url: MapUrl,
         coordinates: coordinates,
     tileSize: 256,       
       });
@@ -155,16 +166,20 @@ const Map = () => {
       mapRef.current.addLayer({
         id: "overlay-layer",
         type: "raster",
-        // source: {
-        //   type: "raster",
-        //   tiles: MapUrl ,
-        //   // bounds: coordinates, // [westLng, southLat, eastLng, northLat]
-        //   tileSize: 256, // Tile size in pixels (usually 256 or 512)
-        // },
         source: "overlay-image",
-        paint: {
-          "raster-opacity": 1.0, // Ensure full opacity
-        },
+      });
+      // @ts-ignore
+      mapRef.current.addSource("overlay-image2", {
+        type: "image",
+        url: MapUrl,
+        coordinates: adjustedCoordinates,
+      });
+
+      // @ts-ignore
+      mapRef.current.addLayer({
+        id: "overlay-layer1",
+        type: "raster",
+        source: "overlay-image2",
       });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
