@@ -82,23 +82,7 @@ const Map = () => {
       });
     }
   };
-  function splitImage(image, tileWidth, tileHeight) {
-    const tiles = [];
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = tileWidth;
-    canvas.height = tileHeight;
-
-    for (let y = 0; y < image.height; y += tileHeight) {
-        for (let x = 0; x < image.width; x += tileWidth) {
-            ctx.clearRect(0, 0, tileWidth, tileHeight);
-            ctx.drawImage(image, -x, -y);
-            tiles.push(canvas.toDataURL());
-        }
-    }
-    return tiles;
-}
+  
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
@@ -164,6 +148,7 @@ const Map = () => {
         type: "image",
         url: "https://api.digitalmaps.pk/api/v1/public/overlay10.jpg",
         coordinates: coordinates,
+    tileSize: 256,       
       });
 
       // @ts-ignore
@@ -177,7 +162,6 @@ const Map = () => {
         //   tileSize: 256, // Tile size in pixels (usually 256 or 512)
         // },
         source: "overlay-image",
-        tileSize: 256, 
         paint: {
           "raster-opacity": 1.0, // Ensure full opacity
         },
