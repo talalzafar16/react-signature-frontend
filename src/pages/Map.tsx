@@ -39,51 +39,51 @@ const Map = () => {
   // const markersRef = useRef([]);
   const mapContainerRef = useRef();
 
-  const Popup = (coords: any) => {
-    return `
-      <div style="padding-left:14px">
-        <div style="text-align: center; font-weight: bold; margin-bottom: 8px;">Details</div>
-        Plot Number: ${coords["PlotNumbers"]}
-        <br />
-        Block: ${coords["Block"]}
-        <br />
-        Plot Location: ${coords["PlotLocation"]}
-        <br />
-        Plot Type: ${coords["PlotType"]}
-        <br />
-        Status: ${coords["Status"]}
-        <br />
-        Transfer Status: ${coords["TransferStatus"]}
-        <br />
-        Area in Marl: ${coords["AreaInMarla"]} marla
-        <br />
-        Demand: ${coords["DemandInLacs"]} lacs
-        <div style="width: 100%; padding: 8px; display: flex; justify-content: center; gap: 8px; flex-direction: column;">
-          <a
-            style="background-color: #60A5FA; display: flex; height: 32px; justify-content: center; align-items: center; padding: 8px; gap: 8px; color: white; border-radius: 8px; text-decoration: none;"
-            href="https://wa.me/03111786929"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <p style="color: white;">Contact Us</p>
-            <FaPhone color="white" />
-          </a>
-        </div>
-      </div>
-    `;
-  };
-  const handleFlyToMarker = (longitude, latitude) => {
-    // Fly to the marker location
-    if (mapRef.current) {
-      // @ts-ignore
-      mapRef.current.flyTo({
-        center: [longitude, latitude],
-        zoom: 18, // You can adjust the zoom level as needed
-        speed: 0.5, // The speed of the flyTo (0.0 - 1.0)
-        curve: 0.8, // The curve of the fly (1 = straight line, < 1 = curved)
-      });
-    }
-  };
+  // const Popup = (coords: any) => {
+  //   return `
+  //     <div style="padding-left:14px">
+  //       <div style="text-align: center; font-weight: bold; margin-bottom: 8px;">Details</div>
+  //       Plot Number: ${coords["PlotNumbers"]}
+  //       <br />
+  //       Block: ${coords["Block"]}
+  //       <br />
+  //       Plot Location: ${coords["PlotLocation"]}
+  //       <br />
+  //       Plot Type: ${coords["PlotType"]}
+  //       <br />
+  //       Status: ${coords["Status"]}
+  //       <br />
+  //       Transfer Status: ${coords["TransferStatus"]}
+  //       <br />
+  //       Area in Marl: ${coords["AreaInMarla"]} marla
+  //       <br />
+  //       Demand: ${coords["DemandInLacs"]} lacs
+  //       <div style="width: 100%; padding: 8px; display: flex; justify-content: center; gap: 8px; flex-direction: column;">
+  //         <a
+  //           style="background-color: #60A5FA; display: flex; height: 32px; justify-content: center; align-items: center; padding: 8px; gap: 8px; color: white; border-radius: 8px; text-decoration: none;"
+  //           href="https://wa.me/03111786929"
+  //           target="_blank"
+  //           rel="noopener noreferrer"
+  //         >
+  //           <p style="color: white;">Contact Us</p>
+  //           <FaPhone color="white" />
+  //         </a>
+  //       </div>
+  //     </div>
+  //   `;
+  // };
+  // const handleFlyToMarker = (longitude, latitude) => {
+  //   // Fly to the marker location
+  //   if (mapRef.current) {
+  //     // @ts-ignore
+  //     mapRef.current.flyTo({
+  //       center: [longitude, latitude],
+  //       zoom: 18, // You can adjust the zoom level as needed
+  //       speed: 0.5, // The speed of the flyTo (0.0 - 1.0)
+  //       curve: 0.8, // The curve of the fly (1 = straight line, < 1 = curved)
+  //     });
+  //   }
+  // };
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
@@ -110,37 +110,37 @@ const Map = () => {
     mapRef.current.touchZoomRotate.disableRotation();
     // @ts-ignore
     mapRef.current.on("load", () => {
-      const bounds = [
-        [74.168, 31.474], // Southwest corner
-        [74.213, 31.4483], // Northeast corner
-      ];
+      // const bounds = [
+      //   [74.168, 31.474], // Southwest corner
+      //   [74.213, 31.4483], // Northeast corner
+      // ];
 
       // Calculate the center of the image
-      const center = [
-        (bounds[0][0] + bounds[1][0]) / 2, // Longitude (x)
-        (bounds[0][1] + bounds[1][1]) / 2, // Latitude (y)
-      ];
+      // const center = [
+      //   (bounds[0][0] + bounds[1][0]) / 2, // Longitude (x)
+      //   (bounds[0][1] + bounds[1][1]) / 2, // Latitude (y)
+      // ];
 
       // Rotation angle in degrees
-      const rotationAngle = -17; // Rotate by 45 degrees
-      const radians = (rotationAngle * Math.PI) / 180;
+      // const rotationAngle = -17; // Rotate by 45 degrees
+      // const radians = (rotationAngle * Math.PI) / 180;
 
       // Function to rotate a point around the center
-      const rotatePoint = (
-        point: number[],
-        center: number[],
-        angle: number
-      ): number[] => {
-        const [cx, cy] = center; // Center coordinates
-        const [x, y] = point; // Point to rotate
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
+      // const rotatePoint = (
+      //   point: number[],
+      //   center: number[],
+      //   angle: number
+      // ): number[] => {
+      //   const [cx, cy] = center; // Center coordinates
+      //   const [x, y] = point; // Point to rotate
+      //   const cos = Math.cos(angle);
+      //   const sin = Math.sin(angle);
 
-        return [
-          cos * (x - cx) - sin * (y - cy) + cx, // New x
-          sin * (x - cx) + cos * (y - cy) + cy, // New y
-        ];
-      };
+      //   return [
+      //     cos * (x - cx) - sin * (y - cy) + cx, // New x
+      //     sin * (x - cx) + cos * (y - cy) + cy, // New y
+      //   ];
+      // };
 
       // Calculate the rotated coordinates
       // const coordinates = [
