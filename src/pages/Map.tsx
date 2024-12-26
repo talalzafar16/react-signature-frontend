@@ -4,9 +4,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
-import MapUrl from "../assets/map/lol.png";
-import MapTile6 from "../assets/map/tiles/6-01.jpg";
-import MapTile9 from "../assets/map/tiles/9.png";
+import MapUrl from "../assets/map/overlay10.png";
+// import MapTile6 from "../assets/map/tiles/6-01.jpg";
+// import MapTile9 from "../assets/map/tiles/9.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
@@ -36,7 +36,7 @@ const Map = () => {
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
   const mapRef = useRef();
-  const markersRef = useRef([]);
+  // const markersRef = useRef([]);
   const mapContainerRef = useRef();
 
   const Popup = (coords: any) => {
@@ -149,37 +149,36 @@ const Map = () => {
       //   [74.2065988060348, 31.441283120529616], //br
       //   [74.18522616658516, 31.4539847242136], //bl
       // ];
-      const Tile9Coordinates = [
-        [74.1952, 31.454725], // Bottom-left (Southwest)
-        [74.2062, 31.454725], // Bottom-right (Southeast)
-        [74.2062, 31.4483], // Top-right (Northeast)
-        [74.1952, 31.4483], // Top-left (Northwest)
-      ];
+      // const Tile9Coordinates = [
+      //   [74.1952, 31.454725], // Bottom-left (Southwest)
+      //   [74.2062, 31.454725], // Bottom-right (Southeast)
+      //   [74.2062, 31.4483], // Top-right (Northeast)
+      //   [74.1952, 31.4483], // Top-left (Northwest)
+      // ];
       const coordinates = [
         rotatePoint([bounds[0][0], bounds[0][1]], center, radians), // Bottom-left
         rotatePoint([bounds[1][0], bounds[0][1]], center, radians), // Bottom-right
         rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
         rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
       ];
-      const Tile6Coordinates = [
-        [74.1952, 31.454725], // Bottom-left (Southwest)
-        [74.2062, 31.454725], // Bottom-right (Southeast)
-        [74.2062, 31.4483], // Top-right (Northeast)
-        [74.1952, 31.4483], // Top-left (Northwest)
-      ];
+      // const Tile6Coordinates = [
+      //   [74.1952, 31.454725], // Bottom-left (Southwest)
+      //   [74.2062, 31.454725], // Bottom-right (Southeast)
+      //   [74.2062, 31.4483], // Top-right (Northeast)
+      //   [74.1952, 31.4483], // Top-left (Northwest)
+      // ];
       // @ts-ignore
       mapRef.current.addSource("overlay-image-9", {
         type: "image",
         url: MapUrl,
         coordinates: coordinates,
-    tileSize: 256,       
       });
       // @ts-ignore
-      mapRef.current.addSource("overlay-image-6", {
-        type: "image",
-        url: MapTile6,
-        coordinates: Tile9Coordinates,
-      });
+      // mapRef.current.addSource("overlay-image-6", {
+      //   type: "image",
+      //   url: MapTile6,
+      //   coordinates: Tile9Coordinates,
+      // });
 
       // @ts-ignore
       mapRef.current.addLayer({
@@ -206,46 +205,146 @@ const Map = () => {
   }, []);
 
   useLayoutEffect(() => {
-    if (markersRef.current.length > 0) {
-      markersRef.current.forEach((marker) => {
-        marker.remove();
-      });
-      markersRef.current = []; // Reset markers
-    }
-    if (arratLATLONG.length > 0 && searchedPlot.length == 0) {
-      arratLATLONG.forEach((plot) => {
-        const marker = new mapboxgl.Marker()
-          // @ts-ignore
-          .setLngLat([plot.longitude, plot.latitude])
-          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
-          .addTo(mapRef.current);
-        markersRef.current.push(marker);
-        // @ts-ignore
-        marker.getElement().addEventListener("click", () => {
-          // @ts-ignore
-
-          handleFlyToMarker(plot.longitude, plot.latitude);
+    if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
+      // Create a GeoJSON object for all markers
+      const geoJsonData = {
+        type: 'FeatureCollection',
+        features: arratLATLONG.map((plot) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [plot.longitude, plot.latitude],
+          },
+          properties: {
+            popupContent: Popup(plot),
+            plot,
+          },
+        })),
+      };
+  
+      // Add the GeoJSON source to the map
+  // @ts-ignore
+      if (mapRef.current.getSource('markers')) {
+  // @ts-ignore
+        mapRef.current.getSource('markers').setData(geoJsonData);
+      } else {
+  // @ts-ignore
+        mapRef.current.addSource('markers', {
+          type: 'geojson',
+          data: geoJsonData,
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
         });
-      });
+  
+  // @ts-ignore
+        mapRef.current.addLayer({
+          id: 'clusters',
+          type: 'circle',
+          source: 'markers',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': '#51bbd6',
+            'circle-radius': 18,
+          },
+        });
+  
+  // @ts-ignore
+        mapRef.current.addLayer({
+          id: 'cluster-count',
+          type: 'symbol',
+          source: 'markers',
+          filter: ['has', 'point_count'],
+          layout: {
+            'text-field': '{point_count_abbreviated}',
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+          },
+        });
+  
+  // @ts-ignore
+        mapRef.current.addLayer({
+          id: 'unclustered-point',
+          type: 'circle',
+          source: 'markers',
+          filter: ['!', ['has', 'point_count']],
+          paint: {
+            'circle-color': '#ff5200',
+            'circle-radius': 8,
+          },
+        });
+      }
     }
-
+  // @ts-ignore
     if (searchedPlot.length > 0) {
-      searchedPlot.forEach((plot) => {
-        const marker = new mapboxgl.Marker()
-          // @ts-ignore
-          .setLngLat([plot.longitude, plot.latitude])
-          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
-          .addTo(mapRef.current);
-        markersRef.current.push(marker);
-        // @ts-ignore
-        marker.getElement().addEventListener("click", () => {
-          // @ts-ignore
+      // Handle searched plot markers
+      const geoJsonData = {
+        type: 'FeatureCollection',
+        features: searchedPlot.map((plot) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [plot.longitude, plot.latitude],
+          },
+          properties: {
+            popupContent: Popup(plot),
+            plot,
+          },
+        })),
+      };
+  
+      // Add the GeoJSON source for searched plots
+  // @ts-ignore
+
+      if (mapRef.current.getSource('searched-markers')) {
+  // @ts-ignore
+
+        mapRef.current.getSource('searched-markers').setData(geoJsonData);
+      } else {
+  // @ts-ignore
+        mapRef.current.addSource('searched-markers', {
+          type: 'geojson',
+          data: geoJsonData,
         });
-      });
+  // @ts-ignore
+        mapRef.current.addLayer({
+          id: 'searched-markers',
+          type: 'circle',
+          source: 'searched-markers',
+          paint: {
+            'circle-color': '#FF0000', // Red for searched plot
+            'circle-radius': 8,
+          },
+        });
+      }
+  
+      // Fly to the first searched plot
       handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
     }
+  
+    // Cleanup markers on map update
+    return () => {
+  // @ts-ignore
+      if (mapRef.current.getSource('markers')) {
+  // @ts-ignore
+        
+        mapRef.current.removeLayer('clusters');
+  // @ts-ignore
+  mapRef.current.removeLayer('cluster-count');
+  // @ts-ignore
+  mapRef.current.removeLayer('unclustered-point');
+  // @ts-ignore
+  mapRef.current.removeSource('markers');
+      }
+  // @ts-ignore
+  if (mapRef.current.getSource('searched-markers')) {
+  // @ts-ignore
+  mapRef.current.removeLayer('searched-markers');
+  // @ts-ignore
+  mapRef.current.removeSource('searched-markers');
+      }
+    };
   }, [arratLATLONG, searchedPlot]);
-
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
