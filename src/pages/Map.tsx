@@ -6,7 +6,7 @@ import "../App.css";
 import "leaflet/dist/leaflet.css";
 // import MapUrl from "../assets/map/overlay10.png";
 // import MapTile6 from "../assets/map/tiles/6-01.jpg";
-import MapTile9 from "../assets/map/tiles/9.png";
+import MapTile9 from "../assets/map/9.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
