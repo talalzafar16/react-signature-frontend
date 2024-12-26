@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
-import MapUrl from "../assets/map/overlay10.png";
+import MapUrl from "../assets/map/overlay.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
@@ -29,7 +29,7 @@ const Map = () => {
   const [searchedPlot, setSearchedPlot] = useState<Models[] | []>([]);
   const [arratLATLONG, setArratLATLONG] = useState<Models[] | []>([]);
   const INITIAL_CENTER = [74.1936, 31.456];
-  const INITIAL_ZOOM = 16.5;
+  const INITIAL_ZOOM = 15;
   const [showSaleModal, setShowSaleModal] = useState<Boolean>(false);
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
@@ -98,9 +98,14 @@ const Map = () => {
       // @ts-ignore
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
-      minZoom: 14,
+      minZoom: 13,
+      pitch: 0, // disable pitch
+      bearing: 0, // disable rotation
     });
-
+    // @ts-ignore
+    mapRef.current.dragRotate.disable();
+    // @ts-ignore
+    mapRef.current.touchZoomRotate.disableRotation();
     // @ts-ignore
     mapRef.current.on("load", () => {
       const bounds = [
@@ -153,14 +158,6 @@ const Map = () => {
       mapRef.current.addLayer({
         id: "overlay-layer",
         type: "raster",
-        // source: {
-        //   type: "raster",
-        //   // tiles: [
-        //   //   MapUrl 
-        //   // ],
-        //   // bounds: coordinates, // [westLng, southLat, eastLng, northLat]
-        //   tileSize: 256, // Tile size in pixels (usually 256 or 512)
-        // },
         source: "overlay-image",
       });
       setTimeout(() => {
