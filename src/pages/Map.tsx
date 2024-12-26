@@ -4,7 +4,9 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
-import MapUrl from "../assets/map/overlay.png";
+import MapUrl from "../assets/map/lol.png";
+import MapTile6 from "../assets/map/tiles/6-01.jpg";
+import MapTile9 from "../assets/map/tiles/9.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
@@ -29,7 +31,7 @@ const Map = () => {
   const [searchedPlot, setSearchedPlot] = useState<Models[] | []>([]);
   const [arratLATLONG, setArratLATLONG] = useState<Models[] | []>([]);
   const INITIAL_CENTER = [74.1936, 31.456];
-  const INITIAL_ZOOM = 15;
+  const INITIAL_ZOOM = 14.5;
   const [showSaleModal, setShowSaleModal] = useState<Boolean>(false);
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
@@ -141,46 +143,57 @@ const Map = () => {
       };
 
       // Calculate the rotated coordinates
+      // const coordinates = [
+      //   [74.20374011939652, 31.455016879470384], //tl
+      //   [74.21077383341484, 31.451860152757864], //tr
+      //   [74.2065988060348, 31.441283120529616], //br
+      //   [74.18522616658516, 31.4539847242136], //bl
+      // ];
+      const Tile9Coordinates = [
+        [74.1952, 31.454725], // Bottom-left (Southwest)
+        [74.2062, 31.454725], // Bottom-right (Southeast)
+        [74.2062, 31.4483], // Top-right (Northeast)
+        [74.1952, 31.4483], // Top-left (Northwest)
+      ];
       const coordinates = [
         rotatePoint([bounds[0][0], bounds[0][1]], center, radians), // Bottom-left
         rotatePoint([bounds[1][0], bounds[0][1]], center, radians), // Bottom-right
         rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
         rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
       ];
-      const adjustedCoordinates = [
-        [74.16274011939652, 31.480016879470384], // Top-right corner (shifted left)
-        [74.20577383341484, 31.466860152757864], // Bottom-right corner (shifted left)
-        [74.19825988060348, 31.442283120529616], // Bottom-left corner (shifted left)
-        [74.15522616658516, 31.455439847242136], // Top-left corner (shifted left)
+      const Tile6Coordinates = [
+        [74.1952, 31.454725], // Bottom-left (Southwest)
+        [74.2062, 31.454725], // Bottom-right (Southeast)
+        [74.2062, 31.4483], // Top-right (Northeast)
+        [74.1952, 31.4483], // Top-left (Northwest)
       ];
-      console.log(coordinates);
       // @ts-ignore
-      mapRef.current.addSource("overlay-image", {
+      mapRef.current.addSource("overlay-image-9", {
         type: "image",
         url: MapUrl,
         coordinates: coordinates,
     tileSize: 256,       
       });
-
       // @ts-ignore
-      mapRef.current.addLayer({
-        id: "overlay-layer",
-        type: "raster",
-        source: "overlay-image",
-      });
-      // @ts-ignore
-      mapRef.current.addSource("overlay-image2", {
+      mapRef.current.addSource("overlay-image-6", {
         type: "image",
-        url: MapUrl,
-        coordinates: adjustedCoordinates,
+        url: MapTile6,
+        coordinates: Tile9Coordinates,
       });
 
       // @ts-ignore
       mapRef.current.addLayer({
-        id: "overlay-layer1",
+        id: "overlay-layer-9",
         type: "raster",
-        source: "overlay-image2",
+        source: "overlay-image-9",
       });
+
+      // @ts-ignore
+      // mapRef.current.addLayer({
+      //   id: "overlay-layer-6",
+      //   type: "raster",
+      //   source: "overlay-image-6",
+      // });
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
       }, 2000);
