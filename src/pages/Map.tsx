@@ -5,7 +5,7 @@ import { useState, useLayoutEffect } from "react";
 import "../App.css";
 import "leaflet/dist/leaflet.css";
 // import MapUrl from "../assets/map/overlay10.png";
-// import MapTile6 from "../assets/map/tiles/6-01.jpg";
+import MapTile6 from "../assets/map/tiles/6.png";
 import MapTile9 from "../assets/map/9.png";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
@@ -152,8 +152,8 @@ const Map = () => {
       // a,b
       // c and d
       const Tile9Coordinates = [
-        [74.1964, 31.454133], // Bottom-left (Southwest) (increased longitude)
-        [74.20628, 31.454133], // Bottom-right (Southeast) (unchanged)
+        [74.1964, 31.454134], // Bottom-left (Southwest) (increased longitude)
+        [74.20628, 31.454134], // Bottom-right (Southeast) (unchanged)
         [74.20598, 31.4483], // Top-right (Northeast) (unchanged)
         [74.1961, 31.4483], // Top-left (Northwest) (increased longitude)
       ];
@@ -165,12 +165,12 @@ const Map = () => {
       //   rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
       //   rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
       // ];
-      // const Tile6Coordinates = [
-      //   [74.1952, 31.454725], // Bottom-left (Southwest)
-      //   [74.2062, 31.454725], // Bottom-right (Southeast)
-      //   [74.2062, 31.4483], // Top-right (Northeast)
-      //   [74.1952, 31.4483], // Top-left (Northwest)
-      // ];
+      const Tile6Coordinates = [
+        [74.1957, 31.4732], // Bottom-left (Southwest) (decreased longitude)
+        [74.2108, 31.4732], // Bottom-right (Southeast)
+        [74.2102, 31.4541],  // Top-right (Northeast)
+        [74.1956, 31.4541],  // Top-left (Northwest) (decreased longitude)
+      ];
       // @ts-ignore
       mapRef.current.addSource("overlay-image-9", {
         type: "image",
@@ -178,19 +178,25 @@ const Map = () => {
         coordinates: Tile9Coordinates,
       });
       // @ts-ignore
-      // mapRef.current.addSource("overlay-image-6", {
-      //   type: "image",
-      //   url: MapTile6,
-      //   coordinates: Tile9Coordinates,
-      // });
+      mapRef.current.addSource("overlay-image-6", {
+        type: "image",
+        url: MapTile6,
+        coordinates: Tile6Coordinates,
+      });
 
+      // @ts-ignore
+      
+      mapRef.current.addLayer({
+        id: "overlay-layer-6",
+        type: "raster",
+        source: "overlay-image-6",
+      });
       // @ts-ignore
       mapRef.current.addLayer({
         id: "overlay-layer-9",
         type: "raster",
         source: "overlay-image-9",
       });
-
       // @ts-ignore
       // mapRef.current.addLayer({
       //   id: "overlay-layer-6",
