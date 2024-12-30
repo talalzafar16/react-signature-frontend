@@ -22,6 +22,7 @@ import EnquireyModal from "@/components/EnquireyModal";
 import FilterModal from "@/components/FilterModal";
 import SaleYourPlotModal from "@/components/SaleYourPlotModal";
 import { CiMail } from "react-icons/ci";
+import { SvgString } from "@/components/svg";
 type Models = {
   plotNumber: string;
   latitude: number;
@@ -43,12 +44,11 @@ const Map = () => {
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
   const mapRef = useRef();
-  const markersRef = useRef([]);
   const mapContainerRef = useRef();
 
   const Popup = (coords: any) => {
     return `
-      <div style="padding-left:14px">
+      <div style="padding-left:10px;padding-right:10px">
         <div style="text-align: center; font-weight: bold; margin-bottom: 8px;">Details</div>
         Plot Number: ${coords["PlotNumbers"]}
         <br />
@@ -347,12 +347,8 @@ mapRef.current.addSource("overlay-image-3", {
   type: "raster",
   source: "overlay-image-3",
 });
-      // @ts-ignore
-      // mapRef.current.addLayer({
-      //   id: "overlay-layer-6",
-      //   type: "raster",
-      //   source: "overlay-image-6",
-      // });
+       // @ts-ignore
+ 
       setTimeout(() => {
         setIsLoading(false); // Hide the loading indicator
       }, 2000);
@@ -363,47 +359,9 @@ mapRef.current.addSource("overlay-image-3", {
       mapRef?.current?.remove();
     };
   }, []);
-  // useLayoutEffect(() => {
-  //   if (markersRef.current.length > 0) {
-  //     markersRef.current.forEach((marker) => {
-  //       marker.remove();
-  //     });
-  //     markersRef.current = []; // Reset markers
-  //   }
-  //   if (arratLATLONG.length > 0 && searchedPlot.length == 0) {
-  //     arratLATLONG.forEach((plot) => {
-  //       const marker = new mapboxgl.Marker()
-  //         // @ts-ignore
-  //         .setLngLat([plot.longitude, plot.latitude])
-  //         .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
-  //         .addTo(mapRef.current);
-  //       markersRef.current.push(marker);
-  //       // @ts-ignore
-  //       marker.getElement().addEventListener("click", () => {
-  //         // @ts-ignore
-
-  //         handleFlyToMarker(plot.longitude, plot.latitude);
-  //       });
-  //     });
-  //   }
-
-  //   if (searchedPlot.length > 0) {
-  //     searchedPlot.forEach((plot) => {
-  //       const marker = new mapboxgl.Marker()
-  //         // @ts-ignore
-  //         .setLngLat([plot.longitude, plot.latitude])
-  //         .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
-  //         .addTo(mapRef.current);
-  //       markersRef.current.push(marker);
-  //       // @ts-ignore
-  //       marker.getElement().addEventListener("click", () => {
-  //         // @ts-ignore
-  //       });
-  //     });
-  //     handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
-  //   }
-  // }, [arratLATLONG, searchedPlot]);
   useLayoutEffect(() => {
+    // @ts-ignore
+
     if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
       // Create a GeoJSON object for all markers
       const geoJsonData = {
@@ -415,7 +373,7 @@ mapRef.current.addSource("overlay-image-3", {
             coordinates: [plot.longitude, plot.latitude],
           },
           properties: {
-            popupContent: Popup(plot),
+            // popupContent: Popup(plot),
             plot,
           },
         })),
@@ -443,10 +401,12 @@ mapRef.current.addSource("overlay-image-3", {
           source: "markers",
           filter: ["has", "point_count"],
           paint: {
-            "circle-color": "#51bbd6",
+            "circle-color": "#CA8A04",
             "circle-radius": 18,
           },
+         
         });
+
 
         // @ts-ignore
         mapRef.current.addLayer({
@@ -459,8 +419,28 @@ mapRef.current.addSource("overlay-image-3", {
             "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
             "text-size": 12,
           },
+          paint: {
+            "text-color": "#FFFFFF",  // Set text color to white in the paint property
+          },
         });
 
+        // const customIconUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(SvgString)}`;
+        
+    // @ts-ignore
+// if (!mapRef.current.hasImage("custom-icon")) {
+//   const img = new Image();
+//   img.onload = () => {
+//     // @ts-ignore
+//     mapRef.current.addImage("custom-icon", customIconUrl,{ sdf: true });
+//   };
+//   img.onerror = (err) => {
+//     console.error("Failed to load SVG image:", err);
+//   };
+//   img.src = MapTile2; // Assign the data URL to the image's source
+//   img.height = 20; // Assign the data URL to the image's source
+//   img.width = 20; // Assign the data URL to the image's source
+// }
+       
         // @ts-ignore
         mapRef.current.addLayer({
           id: "unclustered-point",
@@ -468,11 +448,15 @@ mapRef.current.addSource("overlay-image-3", {
           source: "markers",
           filter: ["!", ["has", "point_count"]],
           paint: {
-            "circle-color": "#ff5200",
-            "circle-radius": 8,
+            "circle-color": "#FF5733",
+            "circle-radius": 4,
           },
+        
         });
+            
       }
+       // Add popup for individual points (plots)
+      ;
     }
     // @ts-ignore
     if (searchedPlot.length > 0) {
@@ -512,7 +496,7 @@ mapRef.current.addSource("overlay-image-3", {
           source: "searched-markers",
           paint: {
             "circle-color": "#FF0000", // Red for searched plot
-            "circle-radius": 8,
+            "circle-radius": 4,
           },
         });
       }
@@ -521,6 +505,30 @@ mapRef.current.addSource("overlay-image-3", {
       handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
     }
 
+    // @ts-ignore
+  if (mapRef.current) {
+    ["clusters", "cluster-count", "unclustered-point", "searched-markers"].forEach((layer) => {
+    // @ts-ignore    
+    if (mapRef.current.getLayer(layer)) {
+    // @ts-ignore
+    mapRef.current.moveLayer(layer);
+      }
+    });
+  }
+  // @ts-ignore
+
+  mapRef.current.on("click", "unclustered-point", (e) => {
+  // @ts-ignore
+  const features = mapRef.current.queryRenderedFeatures(e.point, {
+    layers: ["unclustered-point"],
+  });
+  const coordinates = e.lngLat;
+  const plot = features[0].properties.plot;
+    const popup = new mapboxgl.Popup()
+      .setLngLat(coordinates)
+      .setHTML(Popup(JSON.parse(plot)))
+      .addTo(mapRef.current);
+  })
     // Cleanup markers on map update
     return () => {
       // @ts-ignore
@@ -546,6 +554,7 @@ mapRef.current.addSource("overlay-image-3", {
       }
     };
   }, [arratLATLONG, searchedPlot]);
+ 
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
