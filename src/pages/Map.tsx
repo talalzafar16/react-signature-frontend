@@ -6,10 +6,10 @@ import "../App.css";
 import "leaflet/dist/leaflet.css";
 // import MapUrl from "../assets/map/overlay10.png";
 
-import MapTile8 from "../assets/map/tiles/8.jpg";
-import MapTile7 from "../assets/map/tiles/7.jpg";
-import MapTile2 from "../assets/map/tiles/2.jpg";
-import MapTile3 from "../assets/map/tiles/3.jpg";
+import MapTile8 from "../assets/map/tiles/8.png";
+import MapTile7 from "../assets/map/tiles/7.png";
+import MapTile2 from "../assets/map/tiles/2.png";
+import MapTile3 from "../assets/map/tiles/3.png";
 import MapTile4 from "../assets/map/tiles/4.png";
 import MapTile5 from "../assets/map/tiles/5.png";
 import MapTile6 from "../assets/map/tiles/6.png";
@@ -201,23 +201,17 @@ const Map = () => {
       ];
       
       const Tile8Coordinates = [
-        [74.1830, 31.45399], // Bottom-left (Southwest) (longitude decreased)
-        [74.19563, 31.45399], // Bottom-right (Southeast) (longitude decreased)
+        [74.1830, 31.4541], // Bottom-left (Southwest) (longitude decreased)
+        [74.19563, 31.4541], // Bottom-right (Southeast) (longitude decreased)
         [74.19546, 31.433298], // Top-right (Northeast) (longitude decreased)
         [74.1829, 31.433298], // Top-left (Northwest) (longitude decreased)
       ];
       const Tile7Coordinates = [
-        [74.1703, 31.45398], // Bottom-left (Southwest) (longitude decreased)
-        [74.1830, 31.45398], // Bottom-right (Southeast) (matches Tile8's bottom-left longitude)
+        [74.1703, 31.45409], // Bottom-left (Southwest) (longitude decreased)
+        [74.1830, 31.45409], // Bottom-right (Southeast) (matches Tile8's bottom-left longitude)
         [74.1829, 31.43393], // Top-right (Northeast) (matches Tile8's top-left longitude)
         [74.1702, 31.43393], // Top-left (Northwest) (longitude decreased)
       ];
-      
-      
-      
-      
-      
-      
       
       const Tile2Coordinates = [
         [74.18434, 31.48302], // Bottom-left (moved slightly right)
@@ -225,15 +219,6 @@ const Map = () => {
         [74.200724, 31.469879], // Top-right (moved slightly right)
         [74.18411, 31.469864], // Top-left (moved slightly right)
       ];
-      
-      
-      
-      
-      
-      
-      
-      
-      
       
       const rotateCoordinates = (coords, angleDeg, center) => {
         const angleRad = (angleDeg * Math.PI) / 180; // Convert to radians
@@ -262,11 +247,6 @@ const Map = () => {
       // Apply rotation
       const rotatedCoordinates = rotateCoordinates(Tile2Coordinates, -19.8, center);
       
-      
-      
-      
-      
-
 // @ts-ignore
 mapRef.current.addSource("overlay-image-7", {
   type: "image",
