@@ -91,6 +91,18 @@ const Map = () => {
       });
     }
   };
+  const handleFlyToCluster = (longitude, latitude) => {
+    // Fly to the marker location
+    if (mapRef.current) {
+      // @ts-ignore
+      mapRef.current.flyTo({
+        center: [longitude, latitude],
+        zoom: 15, // You can adjust the zoom level as needed
+        speed: 0.5, // The speed of the flyTo (0.0 - 1.0)
+        curve: 0.8, // The curve of the fly (1 = straight line, < 1 = curved)
+      });
+    }
+  };
   useLayoutEffect(() => {
     axios
       .get(`${API_ENDPOINT}/users/get-plots`)
@@ -117,62 +129,12 @@ const Map = () => {
     mapRef.current.touchZoomRotate.disableRotation();
     // @ts-ignore
     mapRef.current.on("load", () => {
-      // const bounds = [
-      //   [74.168, 31.474], // Southwest corner
-      //   [74.213, 31.4483], // Northeast corner
-      // ];
-
-      // Calculate the center of the image
-      // const center = [
-      //   (bounds[0][0] + bounds[1][0]) / 2, // Longitude (x)
-      //   (bounds[0][1] + bounds[1][1]) / 2, // Latitude (y)
-      // ];
-
-      // Rotation angle in degrees
-      // const rotationAngle = -17; // Rotate by 45 degrees
-      // const radians = (rotationAngle * Math.PI) / 180;
-
-      // Function to rotate a point around the center
-      // const rotatePoint = (
-      //   point: number[],
-      //   center: number[],
-      //   angle: number
-      // ): number[] => {
-      //   const [cx, cy] = center; // Center coordinates
-      //   const [x, y] = point; // Point to rotate
-      //   const cos = Math.cos(angle);
-      //   const sin = Math.sin(angle);
-
-      //   return [
-      //     cos * (x - cx) - sin * (y - cy) + cx, // New x
-      //     sin * (x - cx) + cos * (y - cy) + cy, // New y
-      //   ];
-      // };
-
-      // Calculate the rotated coordinates
-      // const coordinates = [
-      //   [74.20374011939652, 31.455016879470384], //tl
-      //   [74.21077383341484, 31.451860152757864], //tr
-      //   [74.2065988060348, 31.441283120529616], //br
-      //   [74.18522616658516, 31.4539847242136], //bl
-      // ];
-      // a,b
-      // c and d
       const Tile9Coordinates = [
         [74.1964, 31.454134], // Bottom-left (Southwest) (increased longitude)
         [74.20628, 31.454134], // Bottom-right (Southeast) (unchanged)
         [74.20598, 31.4483], // Top-right (Northeast) (unchanged)
         [74.1961, 31.4483], // Top-left (Northwest) (increased longitude)
-      ];
-      // change b  and d to move map from top
-      // change a  and c to move map toward right
-      // const coordinates = [
-      //   rotatePoint([bounds[0][0], bounds[0][1]], center, radians), // Bottom-left
-      //   rotatePoint([bounds[1][0], bounds[0][1]], center, radians), // Bottom-right
-      //   rotatePoint([bounds[1][0], bounds[1][1]], center, radians), // Top-right
-      //   rotatePoint([bounds[0][0], bounds[1][1]], center, radians), // Top-left
-      // ];
-      
+      ];      
       const Tile6Coordinates = [
         [74.19562, 31.4628],  // Bottom-left (Southwest) (unchanged)
         [74.20553, 31.4628],  // Bottom-right (Southeast) (reduced longitude)
@@ -187,8 +149,8 @@ const Map = () => {
         [74.1830, 31.45406], // Top-left (Northwest) (longitude increased)
       ];
       const Tile4Coordinates = [
-        [74.1708, 31.47291], // Bottom-left (Southwest)
-        [74.1833, 31.47291], // Bottom-right (Southeast) (aligned with Tile5's bottom-left)
+        [74.1708, 31.47294], // Bottom-left (Southwest)
+        [74.1833, 31.47294], // Bottom-right (Southeast) (aligned with Tile5's bottom-left)
         [74.1830, 31.45406], // Top-right (Northeast) (aligned with Tile5's top-left)
         [74.1705, 31.45406], // Top-left (Northwest)
       ];
@@ -403,6 +365,13 @@ mapRef.current.addSource("overlay-image-3", {
           paint: {
             "circle-color": "#CA8A04",
             "circle-radius": 18,
+            "circle-opacity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              12, 1,   // Fully opaque at zoom level 12
+              22, 0.2  // More transparent at zoom level 22 (you can adjust this value)
+            ],
           },
          
         });
@@ -449,7 +418,7 @@ mapRef.current.addSource("overlay-image-3", {
           filter: ["!", ["has", "point_count"]],
           paint: {
             "circle-color": "#FF5733",
-            "circle-radius": 4,
+            "circle-radius": 6,
           },
         
         });
@@ -496,7 +465,7 @@ mapRef.current.addSource("overlay-image-3", {
           source: "searched-markers",
           paint: {
             "circle-color": "#FF0000", // Red for searched plot
-            "circle-radius": 4,
+            "circle-radius": 6,
           },
         });
       }
@@ -517,6 +486,13 @@ mapRef.current.addSource("overlay-image-3", {
   }
   // @ts-ignore
 
+  mapRef.current.on("click", "clusters", (e) => {
+    console.log("clusters",e)
+    const coordinates = e.lngLat;
+    handleFlyToCluster(coordinates.lng, coordinates.lat);
+    })
+  // @ts-ignore
+
   mapRef.current.on("click", "unclustered-point", (e) => {
   // @ts-ignore
   const features = mapRef.current.queryRenderedFeatures(e.point, {
@@ -533,28 +509,39 @@ mapRef.current.addSource("overlay-image-3", {
     return () => {
       // @ts-ignore
       if (mapRef?.current) {
-        // @ts-ignore
-        if (mapRef?.current?.getSource("markers")) {
-          // @ts-ignore
-          mapRef.current?.removeLayer("clusters");
-          // @ts-ignore
-          mapRef.current.removeLayer("cluster-count");
-          // @ts-ignore
-          mapRef.current.removeLayer("unclustered-point");
-          // @ts-ignore
-          mapRef.current.removeSource("markers");
-        }
-        // @ts-ignore
-        if (mapRef.current.getSource("searched-markers")) {
-          // @ts-ignore
-          mapRef.current.removeLayer("searched-markers");
-          // @ts-ignore
-          mapRef.current.removeSource("searched-markers");
-        }
+        // // @ts-ignore
+        // if (mapRef?.current?.getSource("markers")) {
+        //   // @ts-ignore
+        //   mapRef.current?.removeLayer("clusters");
+        //   // @ts-ignore
+        //   mapRef.current.removeLayer("cluster-count");
+        //   // @ts-ignore
+        //   mapRef.current.removeLayer("unclustered-point");
+        //   // @ts-ignore
+        //   mapRef.current.removeSource("markers");
+        // }
+        // // @ts-ignore
+        // if (mapRef.current.getSource("searched-markers")) {
+        //   // @ts-ignore
+        //   mapRef.current.removeLayer("searched-markers");
+        //   // @ts-ignore
+        //   mapRef.current.removeSource("searched-markers");
+        // }
       }
     };
   }, [arratLATLONG, searchedPlot]);
- 
+  function blinkCircle() {
+    let opacity = 1;
+    setInterval(() => {
+      opacity = opacity === 1 ? 0 : 1;
+          // @ts-ignore
+
+      mapRef.current.setPaintProperty("clusters", "circle-opacity", opacity);
+    }, 500); // Adjust the interval time for the blinking speed (500 ms in this case)
+  }
+  
+  // Call the function to start the blinking effect
+  blinkCircle();
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
