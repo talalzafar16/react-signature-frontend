@@ -363,189 +363,189 @@ mapRef.current.addSource("overlay-image-3", {
       mapRef?.current?.remove();
     };
   }, []);
-  useLayoutEffect(() => {
-    if (markersRef.current.length > 0) {
-      markersRef.current.forEach((marker) => {
-        marker.remove();
-      });
-      markersRef.current = []; // Reset markers
-    }
-    if (arratLATLONG.length > 0 && searchedPlot.length == 0) {
-      arratLATLONG.forEach((plot) => {
-        const marker = new mapboxgl.Marker()
-          // @ts-ignore
-          .setLngLat([plot.longitude, plot.latitude])
-          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
-          .addTo(mapRef.current);
-        markersRef.current.push(marker);
-        // @ts-ignore
-        marker.getElement().addEventListener("click", () => {
-          // @ts-ignore
-
-          handleFlyToMarker(plot.longitude, plot.latitude);
-        });
-      });
-    }
-
-    if (searchedPlot.length > 0) {
-      searchedPlot.forEach((plot) => {
-        const marker = new mapboxgl.Marker()
-          // @ts-ignore
-          .setLngLat([plot.longitude, plot.latitude])
-          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
-          .addTo(mapRef.current);
-        markersRef.current.push(marker);
-        // @ts-ignore
-        marker.getElement().addEventListener("click", () => {
-          // @ts-ignore
-        });
-      });
-      handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
-    }
-  }, [arratLATLONG, searchedPlot]);
   // useLayoutEffect(() => {
-  //   if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
-  //     // Create a GeoJSON object for all markers
-  //     const geoJsonData = {
-  //       type: "FeatureCollection",
-  //       features: arratLATLONG.map((plot) => ({
-  //         type: "Feature",
-  //         geometry: {
-  //           type: "Point",
-  //           coordinates: [plot.longitude, plot.latitude],
-  //         },
-  //         properties: {
-  //           popupContent: Popup(plot),
-  //           plot,
-  //         },
-  //       })),
-  //     };
-
-  //     // Add the GeoJSON source to the map
-  //     // @ts-ignore
-  //     if (mapRef.current.getSource("markers")) {
-  //       // @ts-ignore
-  //       mapRef.current.getSource("markers").setData(geoJsonData);
-  //     } else {
-  //       // @ts-ignore
-  //       mapRef.current.addSource("markers", {
-  //         type: "geojson",
-  //         data: geoJsonData,
-  //         cluster: true,
-  //         clusterMaxZoom: 14,
-  //         clusterRadius: 50,
-  //       });
-
-  //       // @ts-ignore
-  //       mapRef.current.addLayer({
-  //         id: "clusters",
-  //         type: "circle",
-  //         source: "markers",
-  //         filter: ["has", "point_count"],
-  //         paint: {
-  //           "circle-color": "#51bbd6",
-  //           "circle-radius": 18,
-  //         },
-  //       });
-
-  //       // @ts-ignore
-  //       mapRef.current.addLayer({
-  //         id: "cluster-count",
-  //         type: "symbol",
-  //         source: "markers",
-  //         filter: ["has", "point_count"],
-  //         layout: {
-  //           "text-field": "{point_count_abbreviated}",
-  //           "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-  //           "text-size": 12,
-  //         },
-  //       });
-
-  //       // @ts-ignore
-  //       mapRef.current.addLayer({
-  //         id: "unclustered-point",
-  //         type: "circle",
-  //         source: "markers",
-  //         filter: ["!", ["has", "point_count"]],
-  //         paint: {
-  //           "circle-color": "#ff5200",
-  //           "circle-radius": 8,
-  //         },
-  //       });
-  //     }
+  //   if (markersRef.current.length > 0) {
+  //     markersRef.current.forEach((marker) => {
+  //       marker.remove();
+  //     });
+  //     markersRef.current = []; // Reset markers
   //   }
-  //   // @ts-ignore
+  //   if (arratLATLONG.length > 0 && searchedPlot.length == 0) {
+  //     arratLATLONG.forEach((plot) => {
+  //       const marker = new mapboxgl.Marker()
+  //         // @ts-ignore
+  //         .setLngLat([plot.longitude, plot.latitude])
+  //         .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
+  //         .addTo(mapRef.current);
+  //       markersRef.current.push(marker);
+  //       // @ts-ignore
+  //       marker.getElement().addEventListener("click", () => {
+  //         // @ts-ignore
+
+  //         handleFlyToMarker(plot.longitude, plot.latitude);
+  //       });
+  //     });
+  //   }
+
   //   if (searchedPlot.length > 0) {
-  //     // Handle searched plot markers
-  //     const geoJsonData = {
-  //       type: "FeatureCollection",
-  //       features: searchedPlot.map((plot) => ({
-  //         type: "Feature",
-  //         geometry: {
-  //           type: "Point",
-  //           coordinates: [plot.longitude, plot.latitude],
-  //         },
-  //         properties: {
-  //           popupContent: Popup(plot),
-  //           plot,
-  //         },
-  //       })),
-  //     };
-
-  //     // Add the GeoJSON source for searched plots
-  //     // @ts-ignore
-
-  //     if (mapRef.current.getSource("searched-markers")) {
+  //     searchedPlot.forEach((plot) => {
+  //       const marker = new mapboxgl.Marker()
+  //         // @ts-ignore
+  //         .setLngLat([plot.longitude, plot.latitude])
+  //         .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(Popup(plot))) // @ts-ignore
+  //         .addTo(mapRef.current);
+  //       markersRef.current.push(marker);
   //       // @ts-ignore
-
-  //       mapRef.current.getSource("searched-markers").setData(geoJsonData);
-  //     } else {
-  //       // @ts-ignore
-  //       mapRef.current.addSource("searched-markers", {
-  //         type: "geojson",
-  //         data: geoJsonData,
+  //       marker.getElement().addEventListener("click", () => {
+  //         // @ts-ignore
   //       });
-  //       // @ts-ignore
-  //       mapRef.current.addLayer({
-  //         id: "searched-markers",
-  //         type: "circle",
-  //         source: "searched-markers",
-  //         paint: {
-  //           "circle-color": "#FF0000", // Red for searched plot
-  //           "circle-radius": 8,
-  //         },
-  //       });
-  //     }
-
-  //     // Fly to the first searched plot
+  //     });
   //     handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
   //   }
-
-  //   // Cleanup markers on map update
-  //   return () => {
-  //     // @ts-ignore
-  //     if (mapRef?.current) {
-  //       // @ts-ignore
-  //       // if (mapRef?.current?.getSource("markers")) {
-  //       //   // @ts-ignore
-  //       //   mapRef.current?.removeLayer("clusters");
-  //       //   // @ts-ignore
-  //       //   mapRef.current.removeLayer("cluster-count");
-  //       //   // @ts-ignore
-  //       //   mapRef.current.removeLayer("unclustered-point");
-  //       //   // @ts-ignore
-  //       //   mapRef.current.removeSource("markers");
-  //       // }
-  //       // @ts-ignore
-  //       // if (mapRef.current.getSource("searched-markers")) {
-  //       //   // @ts-ignore
-  //       //   mapRef.current.removeLayer("searched-markers");
-  //       //   // @ts-ignore
-  //       //   mapRef.current.removeSource("searched-markers");
-  //       // }
-  //     }
-  //   };
   // }, [arratLATLONG, searchedPlot]);
+  useLayoutEffect(() => {
+    if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
+      // Create a GeoJSON object for all markers
+      const geoJsonData = {
+        type: "FeatureCollection",
+        features: arratLATLONG.map((plot) => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [plot.longitude, plot.latitude],
+          },
+          properties: {
+            popupContent: Popup(plot),
+            plot,
+          },
+        })),
+      };
+
+      // Add the GeoJSON source to the map
+      // @ts-ignore
+      if (mapRef.current.getSource("markers")) {
+        // @ts-ignore
+        mapRef.current.getSource("markers").setData(geoJsonData);
+      } else {
+        // @ts-ignore
+        mapRef.current.addSource("markers", {
+          type: "geojson",
+          data: geoJsonData,
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
+        });
+
+        // @ts-ignore
+        mapRef.current.addLayer({
+          id: "clusters",
+          type: "circle",
+          source: "markers",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-color": "#51bbd6",
+            "circle-radius": 18,
+          },
+        });
+
+        // @ts-ignore
+        mapRef.current.addLayer({
+          id: "cluster-count",
+          type: "symbol",
+          source: "markers",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+            "text-size": 12,
+          },
+        });
+
+        // @ts-ignore
+        mapRef.current.addLayer({
+          id: "unclustered-point",
+          type: "circle",
+          source: "markers",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": "#ff5200",
+            "circle-radius": 8,
+          },
+        });
+      }
+    }
+    // @ts-ignore
+    if (searchedPlot.length > 0) {
+      // Handle searched plot markers
+      const geoJsonData = {
+        type: "FeatureCollection",
+        features: searchedPlot.map((plot) => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [plot.longitude, plot.latitude],
+          },
+          properties: {
+            popupContent: Popup(plot),
+            plot,
+          },
+        })),
+      };
+
+      // Add the GeoJSON source for searched plots
+      // @ts-ignore
+
+      if (mapRef.current.getSource("searched-markers")) {
+        // @ts-ignore
+
+        mapRef.current.getSource("searched-markers").setData(geoJsonData);
+      } else {
+        // @ts-ignore
+        mapRef.current.addSource("searched-markers", {
+          type: "geojson",
+          data: geoJsonData,
+        });
+        // @ts-ignore
+        mapRef.current.addLayer({
+          id: "searched-markers",
+          type: "circle",
+          source: "searched-markers",
+          paint: {
+            "circle-color": "#FF0000", // Red for searched plot
+            "circle-radius": 8,
+          },
+        });
+      }
+
+      // Fly to the first searched plot
+      handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
+    }
+
+    // Cleanup markers on map update
+    return () => {
+      // @ts-ignore
+      if (mapRef?.current) {
+        // @ts-ignore
+        if (mapRef?.current?.getSource("markers")) {
+          // @ts-ignore
+          mapRef.current?.removeLayer("clusters");
+          // @ts-ignore
+          mapRef.current.removeLayer("cluster-count");
+          // @ts-ignore
+          mapRef.current.removeLayer("unclustered-point");
+          // @ts-ignore
+          mapRef.current.removeSource("markers");
+        }
+        // @ts-ignore
+        if (mapRef.current.getSource("searched-markers")) {
+          // @ts-ignore
+          mapRef.current.removeLayer("searched-markers");
+          // @ts-ignore
+          mapRef.current.removeSource("searched-markers");
+        }
+      }
+    };
+  }, [arratLATLONG, searchedPlot]);
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
