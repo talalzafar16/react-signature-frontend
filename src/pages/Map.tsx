@@ -505,6 +505,8 @@ mapRef.current.addSource("overlay-image-3", {
       .setHTML(Popup(JSON.parse(plot)))
       .addTo(mapRef.current);
   })
+  blinkCircle();
+
     // Cleanup markers on map update
     return () => {
       // @ts-ignore
@@ -537,11 +539,10 @@ mapRef.current.addSource("overlay-image-3", {
           // @ts-ignore
 
       mapRef.current.setPaintProperty("clusters", "circle-opacity", opacity);
-    }, 500); // Adjust the interval time for the blinking speed (500 ms in this case)
+    }, 600); // Adjust the interval time for the blinking speed (500 ms in this case)
   }
   
   // Call the function to start the blinking effect
-  blinkCircle();
   return (
     <div style={{ position: "relative" }}>
       <div className="absolute top-8 right-8 z-[1000]">
