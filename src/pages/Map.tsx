@@ -176,10 +176,10 @@ const Map = () => {
       ];
 
       const Tile2Coordinates = [
-        [74.18434, 31.48302], // Bottom-left (moved slightly right)
-        [74.201244, 31.48296], // Bottom-right (moved slightly right)
-        [74.200724, 31.469879], // Top-right (moved slightly right)
-        [74.18411, 31.469864], // Top-left (moved slightly right)
+        [74.18439, 31.48302], // Bottom-left (moved slightly right)
+        [74.20125, 31.48292], // Bottom-right (moved slightly right)
+        [74.20073, 31.46981], // Top-right (moved slightly right)
+        [74.184162, 31.469853], // Top-left (moved slightly right)
       ];
 
       const rotateCoordinates = (coords, angleDeg, center) => {
@@ -327,8 +327,11 @@ const Map = () => {
     };
   }, []);
   useLayoutEffect(() => {
-    // @ts-ignore
-
+    function removeLayerAndSource(map, layerId, sourceId) {
+      if (map.getLayer(layerId)) {
+        map.removeLayer(layerId);
+      }
+    }
     if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
       // Create a GeoJSON object for all markers
       const geoJsonData = {
@@ -346,7 +349,6 @@ const Map = () => {
         })),
       };
 
-      // Add the GeoJSON source to the map
       // @ts-ignore
       if (mapRef.current.getSource("markers")) {
         // @ts-ignore
@@ -398,34 +400,6 @@ const Map = () => {
           },
         });
 
-        // const customIconUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(SvgString)}`;
-
-        // @ts-ignore
-        // if (!mapRef.current.hasImage("custom-icon")) {
-        //   const img = new Image();
-        //   img.onload = () => {
-        //     // @ts-ignore
-        //     mapRef.current.addImage("custom-icon", customIconUrl,{ sdf: true });
-        //   };
-        //   img.onerror = (err) => {
-        //     console.error("Failed to load SVG image:", err);
-        //   };
-        //   img.src = MapTile2; // Assign the data URL to the image's source
-        //   img.height = 20; // Assign the data URL to the image's source
-        //   img.width = 20; // Assign the data URL to the image's source
-        // }
-
-        // @ts-ignore
-        // mapRef.current.addLayer({
-        //   id: "unclustered-point",
-        //   type: "circle",
-        //   source: "markers",
-        //   filter: ["!", ["has", "point_count"]],
-        //   paint: {
-        //     "circle-color": "#FF5733",
-        //     "circle-radius": 6,
-        //   },
-        // });
         // @ts-ignore
 
         mapRef.current.loadImage(
@@ -460,7 +434,14 @@ const Map = () => {
     }
     // @ts-ignore
     if (searchedPlot.length > 0) {
-      // Handle searched plot markers
+      removeLayerAndSource(mapRef.current, "cluster-count", "markers");
+      removeLayerAndSource(mapRef.current, "clusters", "markers");
+      removeLayerAndSource(mapRef.current, "unclustered-point", "markers");
+      removeLayerAndSource(
+        mapRef.current,
+        "searched-markers",
+        "searched-markers"
+      );
       const geoJsonData = {
         type: "FeatureCollection",
         features: searchedPlot.map((plot) => ({
@@ -476,7 +457,6 @@ const Map = () => {
         })),
       };
 
-      // Add the GeoJSON source for searched plots
       // @ts-ignore
 
       if (mapRef.current.getSource("searched-markers")) {
@@ -490,21 +470,25 @@ const Map = () => {
           data: geoJsonData,
         });
         // @ts-ignore
+
+        // Add a new layer with the custom marker
+        // @ts-ignore
         mapRef.current.addLayer({
           id: "searched-markers",
-          type: "circle",
+          type: "symbol", // Change to symbol
           source: "searched-markers",
-          paint: {
-            "circle-color": "#FF0000", // Red for searched plot
-            "circle-radius": 6,
+          filter: ["!", ["has", "point_count"]],
+          layout: {
+            "icon-image": "custom-marker", // Use the name of your custom image
+            "icon-size": 0.2, // Adjust the size of the marker
+            "icon-anchor": "center", // Anchor the icon in the center
           },
         });
+
+        // Fly to the first searched plot
+        handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
       }
-
-      // Fly to the first searched plot
-      handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
     }
-
     // @ts-ignore
     if (mapRef.current) {
       [
@@ -543,6 +527,24 @@ const Map = () => {
         .setHTML(Popup(JSON.parse(plot)))
         .addTo(mapRef.current);
     });
+    function blinkCircle() {
+      let opacity = 1;
+      const intervalId = setInterval(() => {
+        opacity = opacity === 1 ? 0 : 1;
+        // @ts-ignore
+        if (mapRef.current.getLayer("clusters")) {
+          // @ts-ignore
+          mapRef.current.setPaintProperty(
+            "clusters",
+            "circle-opacity",
+            opacity
+          );
+        } else {
+          clearInterval(intervalId); // Stop blinking if the layer is removed
+        }
+      }, 600);
+    }
+
     blinkCircle();
 
     // Cleanup markers on map update
@@ -570,15 +572,6 @@ const Map = () => {
       }
     };
   }, [arratLATLONG, searchedPlot]);
-  function blinkCircle() {
-    let opacity = 1;
-    setInterval(() => {
-      opacity = opacity === 1 ? 0 : 1;
-      // @ts-ignore
-
-      mapRef.current.setPaintProperty("clusters", "circle-opacity", opacity);
-    }, 600); // Adjust the interval time for the blinking speed (500 ms in this case)
-  }
 
   // Call the function to start the blinking effect
   return (
