@@ -3,6 +3,7 @@ import { Button, Form, Input, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { SERVER_URL } from "@/confidential";
+import { API_ENDPOINT } from "@/config/apiEndpoint";
 
 type FieldType = {
   name?: string;
@@ -18,7 +19,7 @@ const ContactForm = ({ closeModal }: any) => {
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     try {
       const response = await axios.post(
-        `${SERVER_URL}mail/enquiryPlot`,
+        `${API_ENDPOINT}/mail/enquiryPlot`,
         values
       );
 

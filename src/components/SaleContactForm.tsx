@@ -3,6 +3,7 @@ import type { FormProps } from "antd";
 import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 import { SERVER_URL } from "@/confidential";
+import { API_ENDPOINT } from "@/config/apiEndpoint";
 
 type FieldType = {
   name?: string;
@@ -18,7 +19,10 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
 const SaleContactForm = ({ closeModal }: any) => {
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     try {
-      const response = await axios.post(`${SERVER_URL}mail/salePlot`, values);
+      const response = await axios.post(
+        `${API_ENDPOINT}/mail/salePlot`,
+        values
+      );
 
       // Handle response from the API
       console.log("Success:", response.data);
