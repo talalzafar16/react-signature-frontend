@@ -17,7 +17,7 @@ const SaleYourPlotModal = ({ closeModal }) => {
             Sale Your Plot
           </h2>
         </div>
-        <SaleContactForm />
+        <SaleContactForm closeModal={closeModal} />
       </div>
     </div>
   );
