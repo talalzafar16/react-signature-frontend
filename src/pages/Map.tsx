@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useLayoutEffect } from "react";
@@ -44,6 +44,7 @@ const Map = () => {
   const [showEnquireyModal, setShowEnquireyModal] = useState<Boolean>(false);
   const [showFilterModal, setShowFilterModal] = useState<Boolean>(false);
   const mapRef = useRef();
+
   const mapContainerRef = useRef();
 
   const Popup = (coords: any) => {
@@ -315,10 +316,11 @@ const Map = () => {
         source: "overlay-image-3",
       });
       // @ts-ignore
-
-      setTimeout(() => {
-        setIsLoading(false); // Hide the loading indicator
-      }, 2000);
+      mapRef.current.on("idle", () => {
+        setTimeout(() => {
+          setIsLoading(false); // Hide the loading indicator
+        }, 500);
+      });
     });
 
     return () => {
@@ -326,227 +328,231 @@ const Map = () => {
       mapRef?.current?.remove();
     };
   }, []);
-  useLayoutEffect(() => {
-    function removeLayerAndSource(map, layerId, sourceId) {
-      if (map.getLayer(layerId)) {
-        map.removeLayer(layerId);
-      }
-    }
-    if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
-      // Create a GeoJSON object for all markers
-      const geoJsonData = {
-        type: "FeatureCollection",
-        features: arratLATLONG.map((plot) => ({
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [plot.longitude, plot.latitude],
-          },
-          properties: {
-            // popupContent: Popup(plot),
-            plot,
-          },
-        })),
-      };
-
-      // @ts-ignore
-      if (mapRef.current.getSource("markers")) {
-        // @ts-ignore
-        mapRef.current.getSource("markers").setData(geoJsonData);
-      } else {
-        // @ts-ignore
-        mapRef.current.addSource("markers", {
-          type: "geojson",
-          data: geoJsonData,
-          cluster: true,
-          clusterMaxZoom: 14,
-          clusterRadius: 50,
-        });
-
-        // @ts-ignore
-        mapRef.current.addLayer({
-          id: "clusters",
-          type: "circle",
-          source: "markers",
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-color": "#CA8A04",
-            "circle-radius": 18,
-            "circle-opacity": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              12,
-              1, // Fully opaque at zoom level 12
-              22,
-              0.2, // More transparent at zoom level 22 (you can adjust this value)
-            ],
-          },
-        });
-
-        // @ts-ignore
-        mapRef.current.addLayer({
-          id: "cluster-count",
-          type: "symbol",
-          source: "markers",
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": "{point_count_abbreviated}",
-            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-            "text-size": 12,
-          },
-          paint: {
-            "text-color": "#FFFFFF", // Set text color to white in the paint property
-          },
-        });
-
-        // @ts-ignore
-
-        mapRef.current.loadImage(
-          `${API_ENDPOINT}/api/v1/public/marker.png`, // Replace with your custom image URL
-          (error, image) => {
-            if (error) throw error;
-
-            // Add the image to the map
-            // @ts-ignore
-            if (!mapRef.current.hasImage("custom-marker")) {
-              // @ts-ignore
-              mapRef.current.addImage("custom-marker", image);
-            }
-
-            // Add a new layer with the custom marker
-            // @ts-ignore
-            mapRef.current.addLayer({
-              id: "unclustered-point",
-              type: "symbol", // Change to symbol
-              source: "markers",
-              filter: ["!", ["has", "point_count"]],
-              layout: {
-                "icon-image": "custom-marker", // Use the name of your custom image
-                "icon-size": 0.2, // Adjust the size of the marker
-                "icon-anchor": "center", // Anchor the icon in the center
-              },
-            });
-          }
-        );
-      }
-      // Add popup for individual points (plots)
-    }
-    // @ts-ignore
-    if (searchedPlot.length > 0) {
-      removeLayerAndSource(mapRef.current, "cluster-count", "markers");
-      removeLayerAndSource(mapRef.current, "clusters", "markers");
-      removeLayerAndSource(mapRef.current, "unclustered-point", "markers");
-      removeLayerAndSource(
-        mapRef.current,
-        "searched-markers",
-        "searched-markers"
-      );
-      const geoJsonData = {
-        type: "FeatureCollection",
-        features: searchedPlot.map((plot) => ({
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [plot.longitude, plot.latitude],
-          },
-          properties: {
-            popupContent: Popup(plot),
-            plot,
-          },
-        })),
-      };
-
-      // @ts-ignore
-
-      if (mapRef.current.getSource("searched-markers")) {
-        // @ts-ignore
-
-        mapRef.current.getSource("searched-markers").setData(geoJsonData);
-      } else {
-        // @ts-ignore
-        mapRef.current.addSource("searched-markers", {
-          type: "geojson",
-          data: geoJsonData,
-        });
-        // @ts-ignore
-
-        // Add a new layer with the custom marker
-        // @ts-ignore
-        mapRef.current.addLayer({
-          id: "searched-markers",
-          type: "symbol", // Change to symbol
-          source: "searched-markers",
-          filter: ["!", ["has", "point_count"]],
-          layout: {
-            "icon-image": "custom-marker", // Use the name of your custom image
-            "icon-size": 0.2, // Adjust the size of the marker
-            "icon-anchor": "center", // Anchor the icon in the center
-          },
-        });
-
-        // Fly to the first searched plot
-        handleFlyToMarker(searchedPlot[0].longitude, searchedPlot[0].latitude);
-      }
-    }
-    // @ts-ignore
-    if (mapRef.current) {
-      [
-        "clusters",
-        "cluster-count",
-        "unclustered-point",
-        "searched-markers",
-      ].forEach((layer) => {
-        // @ts-ignore
-        if (mapRef.current.getLayer(layer)) {
-          // @ts-ignore
-          mapRef.current.moveLayer(layer);
+  useEffect(() => {
+    setTimeout(() => {
+      function removeLayerAndSource(map, layerId, sourceId) {
+        if (map.getLayer(layerId)) {
+          map.removeLayer(layerId);
         }
-      });
-    }
-    // @ts-ignore
+      }
+      if (arratLATLONG.length > 0 && searchedPlot.length === 0) {
+        // Create a GeoJSON object for all markers
+        const geoJsonData = {
+          type: "FeatureCollection",
+          features: arratLATLONG.map((plot) => ({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [plot.longitude, plot.latitude],
+            },
+            properties: {
+              // popupContent: Popup(plot),
+              plot,
+            },
+          })),
+        };
 
-    mapRef.current.on("click", "clusters", (e) => {
-      console.log("clusters", e);
-      const coordinates = e.lngLat;
-      handleFlyToCluster(coordinates.lng, coordinates.lat);
-    });
-    // @ts-ignore
-
-    mapRef.current.on("click", "unclustered-point", (e) => {
-      // @ts-ignore
-      const features = mapRef.current.queryRenderedFeatures(e.point, {
-        layers: ["unclustered-point"],
-      });
-      const coordinates = e.lngLat;
-      handleFlyToMarker(coordinates.lng, coordinates.lat);
-
-      const plot = features[0].properties.plot;
-      const popup = new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML(Popup(JSON.parse(plot)))
-        .addTo(mapRef.current);
-    });
-    function blinkCircle() {
-      let opacity = 1;
-      const intervalId = setInterval(() => {
-        opacity = opacity === 1 ? 0 : 1;
         // @ts-ignore
-        if (mapRef.current.getLayer("clusters")) {
+        if (mapRef.current.getSource("markers")) {
           // @ts-ignore
-          mapRef.current.setPaintProperty(
-            "clusters",
-            "circle-opacity",
-            opacity
-          );
+          mapRef.current.getSource("markers").setData(geoJsonData);
         } else {
-          clearInterval(intervalId); // Stop blinking if the layer is removed
+          // @ts-ignore
+          mapRef.current.addSource("markers", {
+            type: "geojson",
+            data: geoJsonData,
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 50,
+          });
+
+          // @ts-ignore
+          mapRef.current.addLayer({
+            id: "clusters",
+            type: "circle",
+            source: "markers",
+            filter: ["has", "point_count"],
+            paint: {
+              "circle-color": "#CA8A04",
+              "circle-radius": 18,
+              "circle-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                12,
+                1, // Fully opaque at zoom level 12
+                22,
+                0.2, // More transparent at zoom level 22 (you can adjust this value)
+              ],
+            },
+          });
+
+          // @ts-ignore
+          mapRef.current.addLayer({
+            id: "cluster-count",
+            type: "symbol",
+            source: "markers",
+            filter: ["has", "point_count"],
+            layout: {
+              "text-field": "{point_count_abbreviated}",
+              "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+              "text-size": 12,
+            },
+            paint: {
+              "text-color": "#FFFFFF", // Set text color to white in the paint property
+            },
+          });
+
+          // @ts-ignore
+
+          mapRef.current.loadImage(
+            `${API_ENDPOINT}/api/v1/public/marker.png`, // Replace with your custom image URL
+            (error, image) => {
+              if (error) throw error;
+
+              // Add the image to the map
+              // @ts-ignore
+              if (!mapRef.current.hasImage("custom-marker")) {
+                // @ts-ignore
+                mapRef.current.addImage("custom-marker", image);
+              }
+
+              // Add a new layer with the custom marker
+              // @ts-ignore
+              mapRef.current.addLayer({
+                id: "unclustered-point",
+                type: "symbol", // Change to symbol
+                source: "markers",
+                filter: ["!", ["has", "point_count"]],
+                layout: {
+                  "icon-image": "custom-marker", // Use the name of your custom image
+                  "icon-size": 0.2, // Adjust the size of the marker
+                  "icon-anchor": "center", // Anchor the icon in the center
+                },
+              });
+            }
+          );
         }
-      }, 600);
-    }
+        // Add popup for individual points (plots)
+      }
+      // @ts-ignore
+      if (searchedPlot.length > 0) {
+        removeLayerAndSource(mapRef.current, "cluster-count", "markers");
+        removeLayerAndSource(mapRef.current, "clusters", "markers");
+        removeLayerAndSource(mapRef.current, "unclustered-point", "markers");
+        removeLayerAndSource(
+          mapRef.current,
+          "searched-markers",
+          "searched-markers"
+        );
+        const geoJsonData = {
+          type: "FeatureCollection",
+          features: searchedPlot.map((plot) => ({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [plot.longitude, plot.latitude],
+            },
+            properties: {
+              popupContent: Popup(plot),
+              plot,
+            },
+          })),
+        };
 
-    blinkCircle();
+        // @ts-ignore
 
+        if (mapRef.current.getSource("searched-markers")) {
+          // @ts-ignore
+
+          mapRef.current.getSource("searched-markers").setData(geoJsonData);
+        } else {
+          // @ts-ignore
+          mapRef.current.addSource("searched-markers", {
+            type: "geojson",
+            data: geoJsonData,
+          });
+          // @ts-ignore
+
+          // Add a new layer with the custom marker
+          // @ts-ignore
+          mapRef.current.addLayer({
+            id: "searched-markers",
+            type: "symbol", // Change to symbol
+            source: "searched-markers",
+            filter: ["!", ["has", "point_count"]],
+            layout: {
+              "icon-image": "custom-marker", // Use the name of your custom image
+              "icon-size": 0.2, // Adjust the size of the marker
+              "icon-anchor": "center", // Anchor the icon in the center
+            },
+          });
+
+          // Fly to the first searched plot
+          handleFlyToMarker(
+            searchedPlot[0].longitude,
+            searchedPlot[0].latitude
+          );
+        }
+      }
+      // @ts-ignore
+      if (mapRef.current) {
+        [
+          "clusters",
+          "cluster-count",
+          "unclustered-point",
+          "searched-markers",
+        ].forEach((layer) => {
+          // @ts-ignore
+          if (mapRef.current.getLayer(layer)) {
+            // @ts-ignore
+            mapRef.current.moveLayer(layer);
+          }
+        });
+      }
+      // @ts-ignore
+
+      mapRef.current.on("click", "clusters", (e) => {
+        console.log("clusters", e);
+        const coordinates = e.lngLat;
+        handleFlyToCluster(coordinates.lng, coordinates.lat);
+      });
+      // @ts-ignore
+
+      mapRef.current.on("click", "unclustered-point", (e) => {
+        // @ts-ignore
+        const features = mapRef.current.queryRenderedFeatures(e.point, {
+          layers: ["unclustered-point"],
+        });
+        const coordinates = e.lngLat;
+        handleFlyToMarker(coordinates.lng, coordinates.lat);
+
+        const plot = features[0].properties.plot;
+        const popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(Popup(JSON.parse(plot)))
+          .addTo(mapRef.current);
+      });
+      function blinkCircle() {
+        let opacity = 1;
+        const intervalId = setInterval(() => {
+          opacity = opacity === 1 ? 0 : 1;
+          // @ts-ignore
+          if (mapRef.current.getLayer("clusters")) {
+            // @ts-ignore
+            mapRef.current.setPaintProperty(
+              "clusters",
+              "circle-opacity",
+              opacity
+            );
+          } else {
+            clearInterval(intervalId); // Stop blinking if the layer is removed
+          }
+        }, 600);
+      }
+
+      blinkCircle();
+    }, 1000);
     // Cleanup markers on map update
     return () => {
       // @ts-ignore

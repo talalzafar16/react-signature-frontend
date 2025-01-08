@@ -128,7 +128,6 @@ const AnotherMap = () => {
         [74.20073, 31.46981], // Top-right (moved slightly right)
         [74.184162, 31.469853], // Top-left (moved slightly right)
       ];
-
       const rotateCoordinates = (coords, angleDeg, center) => {
         const angleRad = (angleDeg * Math.PI) / 180; // Convert to radians
         const cosTheta = Math.cos(angleRad);
