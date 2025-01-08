@@ -427,7 +427,7 @@ const Map = () => {
                 layout: {
                   "icon-image": "custom-marker", // Use the name of your custom image
                   "icon-size": 0.2, // Adjust the size of the marker
-                  "icon-anchor": "center", // Anchor the icon in the center
+                  "icon-anchor": "bottom", // Anchor the icon in the center
                 },
               });
             }
@@ -484,7 +484,7 @@ const Map = () => {
             layout: {
               "icon-image": "custom-marker", // Use the name of your custom image
               "icon-size": 0.2, // Adjust the size of the marker
-              "icon-anchor": "center", // Anchor the icon in the center
+              "icon-anchor": "bottom", // Anchor the icon in the center
             },
           });
 
