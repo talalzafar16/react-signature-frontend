@@ -22,14 +22,16 @@ const SaleContactForm = ({ closeModal }: any) => {
 
       // Handle response from the API
       console.log("Success:", response.data);
-      message.success("Your request has been submitted successfully!");
       closeModal(false);
+      message.success("Your request has been submitted successfully!");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("API Error:", error.response?.data);
+        closeModal(false);
         message.error("Failed to submit your request.");
       } else {
         console.error("Unexpected Error:", error);
+        closeModal(false);
         message.error("An unexpected error occurred.");
       }
     }
