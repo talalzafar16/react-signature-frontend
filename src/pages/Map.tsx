@@ -13,7 +13,7 @@ import MapTile3 from "../assets/map/tiles/3.webp";
 import MapTile4 from "../assets/map/tiles/4.webp";
 import MapTile5 from "../assets/map/tiles/5.webp";
 import MapTile6 from "../assets/map/tiles/6.webp";
-import MapTile9 from "../assets/map/tiles/9.webp";
+import MapTile9 from "../assets/map/9.webp";
 import { API_ENDPOINT } from "../config/apiEndpoint";
 import axios, { AxiosResponse } from "axios";
 import { TbFilterSearch } from "react-icons/tb";
